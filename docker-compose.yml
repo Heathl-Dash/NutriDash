@@ -1,3 +1,4 @@
+
 services:
   web:
     build: .
@@ -25,6 +26,13 @@ services:
       - .env
     ports:
       - "${DB_PORT}:${DB_PORT}"
+  nutriDash_db:
+    image: postgres:17.5
+    container_name: nutriDash_db
+    env_file:
+      - .env
+    ports:
+      - "${DB_PORT}:5432"
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -35,6 +43,8 @@ services:
     networks:
       - nutri_dash_network
     restart: always
+    networks:
+      - nutridashboard-rede
 
   redis:
     image: redis:7
@@ -63,5 +73,5 @@ volumes:
   nutri_dash_postgres_data:
 
 networks:
-  nutri_dash_network:
+  nutridashboard-rede:
     driver: bridge
