@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean
-from app.db.session import Base
+from app.db.database import Base
 
 class Habit(Base):
     __tablename__ = "habits"

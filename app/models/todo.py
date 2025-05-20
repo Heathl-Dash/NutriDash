@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from app.db.session import Base
+from app.db.database import Base
 
 class ToDo(Base):
     __tablename__ = "to_dos"
