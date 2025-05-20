@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.schemas.todo import ToDoCreate, ToDoRead, ToDoUpdate
 from app.crud import crud_todo
@@ -21,9 +22,14 @@ def read_todo(todo_id: int, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=ToDoRead, status_code=201)
 def create_todo(todo: ToDoCreate, db: Session = Depends(get_db)):
-    return crud_todo.create_todo(db, todo)
+    try:
+        return crud_todo.create_todo(db, todo)
+    except SQLAlchemyError as e:
+        db.rollback()
+        print(f"[ERRO] Erro ao criar TODO: {e}")
+        raise
 
-@router.put("/{todo_id}", response_model=ToDoRead)
+@router.patch("/{todo_id}", response_model=ToDoRead)
 def update_todo(todo_id: int, todo_data: ToDoUpdate, db: Session = Depends(get_db)):
     todo = crud_todo.update_todo(db, todo_id, todo_data)
     if not todo:

@@ -16,6 +16,6 @@ class ToDoRead(ToDoBase):
         orm_mode = True
 
 class ToDoUpdate(ToDoBase):
-    title: Optional[str]
-    description: Optional[str]
-    done: Optional[bool]
+    title: Optional[str] = None
+    description: Optional[str] = None
+    done: Optional[bool] = None
