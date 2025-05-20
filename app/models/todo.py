@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from app.db.session import Base
+from app.db.database import Base
 
 class ToDo(Base):
     __tablename__ = "to_dos"
@@ -10,7 +10,7 @@ class ToDo(Base):
     description = Column(String, nullable=False, default="")
     done = Column(Boolean, default=False)
 
-    histories = relationship("ToDoHistory", back_populates="todo", cascade="all, delete-orphan")
+    histories = relationship("ToDohistory", back_populates="todo", cascade="all, delete-orphan")
 
 class ToDohistory(Base):
     __tablename__ = "to_do_histories"

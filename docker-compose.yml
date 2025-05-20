@@ -1,4 +1,3 @@
-
 services:
   web:
     build: .
@@ -17,6 +16,8 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - PYTHONPATH=/app
+    networks:
+      - nutridashboard-rede
 
   nutriDash_db:
     image: postgres:17.5
@@ -24,7 +25,7 @@ services:
     env_file:
       - .env
     ports:
-      - "${DB_PORT}:5432"
+      - "5432:5432"
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -33,12 +34,19 @@ services:
       - nutri_dash_postgres_data:/var/lib/postgresql/data
     networks:
       - nutridashboard-rede
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7
     container_name: redis_broker
     ports:
       - "6379:6379"
+    networks:
+      - nutridashboard-rede
 
   celery:
     build: .
@@ -52,6 +60,8 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    networks:
+      - nutridashboard-rede
 
 volumes:
   nutri_dash_postgres_data:
