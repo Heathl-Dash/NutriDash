@@ -28,3 +28,10 @@ def update_habit(db: Session, habit_id: int, habit_data: HabitUpdate):
   return db_habit
 
 
+def delete_habit(db: Session, habit_id):
+  db_habit = get_habit(db, habit_id)
+  if not db_habit:
+    return None
+  db.delete(db_habit)
+  db.commit()
+  return db_habit

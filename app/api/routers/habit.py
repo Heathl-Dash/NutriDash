@@ -35,3 +35,10 @@ def update_habit(habit_id: int, habit_data: HabitUpdate, db: Session = Depends(g
   if not habit:
     raise HTTPException(status_code=404, detail="Habit not found")
   return habit
+
+@router.delete("/{habit_id}", response_model=HabitRead)
+def delete_habit(habit_id: int, db:Session = Depends(get_db)):
+  habit = crud_habits.delete_habit(db, habit_id)
+  if not habit:
+    raise HTTPException(status_code=404, detail="Habit not found")
+  return habit
