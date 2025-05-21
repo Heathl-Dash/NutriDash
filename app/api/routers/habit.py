@@ -28,3 +28,10 @@ def read_habit(habit_id: int, db: Session = Depends(get_db)):
   if not habit:
     raise HTTPException(status_code=404, detail="Habit not found")
   return habit
+
+@router.patch("/{habit_id}", response_model=HabitRead)
+def update_habit(habit_id: int, habit_data: HabitUpdate, db: Session = Depends(get_db)):
+  habit = crud_habits.update_habit(db, habit_id, habit_data)
+  if not habit:
+    raise HTTPException(status_code=404, detail="Habit not found")
+  return habit

@@ -17,3 +17,14 @@ def create_habit(db:Session, habit:HabitCreate):
   return db_habit
 
 
+def update_habit(db: Session, habit_id: int, habit_data: HabitUpdate):
+  db_habit = get_habit(db, habit_id)
+  if not db_habit:
+    return None
+  for key, value in habit_data.dict(exclude_unset=True).items():
+    setattr(db_habit, key, value)
+  db.commit()
+  db.refresh(db_habit)
+  return db_habit
+
+
