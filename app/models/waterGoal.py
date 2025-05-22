@@ -7,6 +7,7 @@ class WaterGoal(Base):
     water_goal_id = Column(Integer, primary_key=True, index=True)
     ml_goal = Column(Integer, nullable=False)
     ml_drinked = Column(Integer, default=0)
+    user_id = Column(Integer, nullable=False)
 
     bottles = relationship("WaterBottle", back_populates="goal", cascade="all, delete-orphan")
 
@@ -16,5 +17,8 @@ class WaterBottle(Base):
     water_goal_id = Column(Integer, ForeignKey("water_goals.water_goal_id"), nullable=False)
     bottle_name = Column(String, nullable=False)
     ml_bottle = Column(Integer, nullable=False)
+    user_id = Column(Integer, nullable=False)
+
+    
 
     goal = relationship("WaterGoal", back_populates="bottles")
