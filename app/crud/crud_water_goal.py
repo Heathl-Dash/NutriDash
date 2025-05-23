@@ -4,7 +4,7 @@ from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate
 
 
 def get_water_goal(db: Session, user_id:int):
-  return db.query.all(WaterGoal).filter(user_id == user_id).first()
+  return db.query(WaterGoal).filter(WaterGoal.user_id == user_id).first()
 
 
 def create_water_goal(db: Session, water_goal:WaterGoalCreate):
