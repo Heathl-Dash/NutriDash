@@ -32,3 +32,11 @@ def update_water_goal(user_id: int, water_goal_data:WaterGoalUpdate, db:Session 
   if not water_goal:
     raise HTTPException(status_code=404, detail="Water goal not found")
   return water_goal
+
+
+@router.delete("/{user_id}", response_model=WaterGoalRead)
+def delete_water_goal(user_id:int, db: Session = Depends(get_db)):
+  water_goal = crud_water_goal.delete_water_goal(db, user_id)
+  if not  water_goal:
+    raise HTTPException(status_code=404, detail=" Water goal not found")
+  return  water_goal
