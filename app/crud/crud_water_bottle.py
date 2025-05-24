@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
-from app.models.waterGoal import WaterBottle
+from app.models.waterGoal import WaterBottle, WaterGoal
 
 from app.schemas.waterGoal import WaterBottleCreate, WaterBottleRead, WaterBottleUpdate
+
+from fastapi import HTTPException
 
 def get_water_bottle(db: Session, water_bottle_id: int):
   return db.query(WaterBottle).filter(WaterBottle.water_bottle_id == water_bottle_id).first()
@@ -10,7 +12,11 @@ def get_water_bottle_user(db: Session, user_id: int):
   return db.query(WaterBottle).filter(WaterBottle.user_id == user_id).all()
 
 def create_water_bottle(db: Session, water_bottle: WaterBottleCreate):
-  db_water_bottle = WaterBottle(**water_bottle.model_dump())
+  user_goal = db.query(WaterGoal).filter(WaterGoal.user_id == water_bottle.user_id).first()
+  if not user_goal:
+    raise HTTPException(status_code=400, detail="Water goal not found for user")
+
+  db_water_bottle = WaterBottle(**water_bottle.model_dump(), water_goal_id=user_goal.water_goal_id)
   db.add(db_water_bottle)
   db.commit()
   db.refresh(db_water_bottle)

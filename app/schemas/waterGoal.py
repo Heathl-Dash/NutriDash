@@ -21,11 +21,11 @@ class WaterBottleBase(BaseModel):
 
 
 class WaterBottleCreate(WaterBottleBase):
-    pass
+    user_id:int
 
 class WaterBottleRead(WaterBottleBase):
+    user_id:int
     water_bottle_id: int
-    water_goal_id: int
 
     class Config:
         orm_mode = True
