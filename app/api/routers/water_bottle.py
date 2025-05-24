@@ -15,3 +15,10 @@ def read_water_bottle(water_bottle_id, db: Session = Depends(get_db)):
   if not water_bottle:
     raise HTTPException(status_code=404, detail="Water bottle not found")
   return water_bottle
+
+@router.get("/user/{user_id}", response_model=List[WaterBottleRead], status_code=201)
+def read_water_bottle(water_bottle_id, db: Session = Depends(get_db)):
+  water_bottle = crud_water_bottle.get_water_bottle_user(db, water_bottle_id)
+  if not water_bottle:
+    raise HTTPException(status_code=404, detail="Water bottle not found")
+  return water_bottle

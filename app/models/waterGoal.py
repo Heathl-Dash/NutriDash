@@ -16,5 +16,6 @@ class WaterBottle(Base):
     water_goal_id = Column(Integer, ForeignKey("water_goals.water_goal_id"), nullable=False)
     bottle_name = Column(String, nullable=False)
     ml_bottle = Column(Integer, nullable=False)
+    user_id = Column(Integer, nullable=False)
 
     goal = relationship("WaterGoal", back_populates="bottles")
