@@ -7,7 +7,7 @@ class WaterGoalBase(BaseModel):
 
 
 class WaterGoalCreate(WaterGoalBase):
-    pass
+    user_id: Optional[int] = None
 
 
 class WaterGoalUpdate(BaseModel):
@@ -37,6 +37,7 @@ class WaterBottleUpdate(BaseModel):
 
 class WaterGoalRead(WaterGoalBase):
     water_goal_id: int
+    ml_drinked: Optional[int] = None
     bottles: List[WaterBottleRead] = []
 
     class Config:
