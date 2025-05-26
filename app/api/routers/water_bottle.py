@@ -28,3 +28,19 @@ def read_water_bottle(user_id, db: Session = Depends(get_db)):
 @router.post("/", response_model=WaterBottleRead, status_code=201)
 def create_water_bottle(water_bottle: WaterBottleCreate, db: Session = Depends(get_db)):
     return crud_water_bottle.create_water_bottle(db, water_bottle)
+
+
+@router.patch("/{water_bottle_id}", response_model=WaterBottleRead, status_code=201)
+def update_water_bottle(user_id: int, water_bottle_data:WaterBottleUpdate, db:Session = Depends(get_db)):
+  water_bottle = crud_water_bottle.update_water_bottle(db, user_id, water_bottle_data)
+  if not water_bottle:
+    raise HTTPException(status_code=404, detail="Water bottle not found")
+  return water_bottle
+
+
+@router.delete("/{water_bottle_id}", response_model=WaterBottleRead)
+def delete_water_bottle(water_bottle_id:int, db: Session = Depends(get_db)):
+  water_bottle = crud_water_bottle.delete_water_bottle(db, water_bottle_id)
+  if not  water_bottle:
+    raise HTTPException(status_code=404, detail=" Water goal not found")
+  return  water_bottle

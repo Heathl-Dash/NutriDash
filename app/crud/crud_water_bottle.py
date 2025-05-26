@@ -4,6 +4,7 @@ from app.models.waterGoal import WaterBottle, WaterGoal
 from app.schemas.waterGoal import WaterBottleCreate, WaterBottleRead, WaterBottleUpdate
 
 from fastapi import HTTPException
+from app.crud.crud_water_goal import get_water_goal_by_user
 
 def get_water_bottle(db: Session, water_bottle_id: int):
   return db.query(WaterBottle).filter(WaterBottle.water_bottle_id == water_bottle_id).first()
@@ -12,7 +13,7 @@ def get_water_bottle_user(db: Session, user_id: int):
   return db.query(WaterBottle).filter(WaterBottle.user_id == user_id).all()
 
 def create_water_bottle(db: Session, water_bottle: WaterBottleCreate):
-  user_goal = db.query(WaterGoal).filter(WaterGoal.user_id == water_bottle.user_id).first()
+  user_goal = get_water_goal_by_user(db, water_bottle.user_id)
   if not user_goal:
     raise HTTPException(status_code=400, detail="Water goal not found for user")
 
