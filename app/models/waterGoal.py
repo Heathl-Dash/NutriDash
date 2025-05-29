@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from datetime import datetime
 from sqlalchemy.orm import relationship
 from app.db.database import Base
 
@@ -8,6 +9,7 @@ class WaterGoal(Base):
     ml_goal = Column(Integer, nullable=False)
     ml_drinked = Column(Integer, default=0)
     user_id = Column(Integer, nullable=False)
+    last_updated = Column(DateTime, default=datetime.utcnow)
 
     bottles = relationship("WaterBottle", back_populates="goal", cascade="all, delete-orphan")
 
