@@ -9,6 +9,7 @@ class ToDo(Base):
     title = Column(String, nullable=False)
     description = Column(String, nullable=False, default="")
     done = Column(Boolean, default=False)
+    user_id = Column(Integer, nullable=False)
 
     histories = relationship("ToDohistory", back_populates="todo", cascade="all, delete-orphan")
 

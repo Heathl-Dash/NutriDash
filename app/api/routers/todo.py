@@ -7,11 +7,14 @@ from app.schemas.todo import ToDoCreate, ToDoRead, ToDoUpdate
 from app.crud import crud_todo
 from app.db.database import get_db
 
+from app.dependencies.user import get_user_id
+
+
 router = APIRouter(prefix="/todos", tags=["ToDos"])
 
-@router.get("/", response_model=List[ToDoRead])
-def read_todos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return crud_todo.get_todos(db, skip=skip, limit=limit)
+@router.get("/list", response_model=List[ToDoRead])
+def read_todos(user_id: int = Depends(get_user_id), skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return crud_todo.get_todos(db, user_id=user_id, skip=skip, limit=limit)
 
 @router.get("/{todo_id}", response_model = ToDoRead)
 def read_todo(todo_id: int, db: Session = Depends(get_db)):
