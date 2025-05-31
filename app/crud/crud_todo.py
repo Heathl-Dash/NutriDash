@@ -9,8 +9,8 @@ def get_todos(db: Session, user_id: int, skip: int = 0, limit: int = 100):
     return db.query(ToDo).filter(ToDo.user_id == user_id).offset(skip).limit(limit).all()
 
 
-def create_todo(db: Session, todo: ToDoCreate):
-    db_todo = ToDo(**todo.model_dump())
+def create_todo(db: Session, todo: ToDoCreate, user_id: int):
+    db_todo = ToDo(**todo.model_dump(), user_id=user_id)
     db.add(db_todo)
     db.commit()
     db.refresh(db_todo)

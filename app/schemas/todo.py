@@ -6,7 +6,7 @@ class ToDoBase(BaseModel):
     description: str
 
 class ToDoCreate(ToDoBase):
-    user_id: int
+    pass
 
 class ToDoRead(ToDoBase):
     user_id: int
