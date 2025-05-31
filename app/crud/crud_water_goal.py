@@ -2,9 +2,28 @@ from sqlalchemy.orm import Session
 from app.models.waterGoal import WaterGoal
 from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate
 
+from datetime import datetime, date
+from zoneinfo import ZoneInfo
+
+# import pytz
 
 def get_water_goal(db: Session, user_id:int):
-  return db.query(WaterGoal).filter(WaterGoal.user_id == user_id).first()
+  water_goal = db.query(WaterGoal).filter(WaterGoal.user_id == user_id).first()
+  if not water_goal:
+    return None
+
+  # tz = pytz.timezone("America/Sao_Paulo")
+  now_local = datetime.now(ZoneInfo("America/Sao_Paulo"))
+  today_local = now_local.date()
+
+  if water_goal.last_updated.date() < today_local:
+      water_goal.ml_drinked = 0
+      water_goal.last_updated = now_local
+      db.commit()
+      db.refresh(water_goal)
+
+  return water_goal
+
 
 def get_water_goal_by_user(db: Session, user_id: int):
   return db.query(WaterGoal).filter(WaterGoal.user_id == user_id).first()
