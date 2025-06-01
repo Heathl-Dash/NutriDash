@@ -2,9 +2,13 @@
 import jwt
 from fastapi import HTTPException, status
 from jwt import PyJWTError
+from dotenv import load_dotenv
+import os
 
-SECRET_KEY = "Havoc"
-ALGORITHM = "HS256"  # ou RS256, dependendo do emissor
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
 
 def verify_token(token: str):
   try:
