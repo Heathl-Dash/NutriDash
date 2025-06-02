@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
+from datetime import datetime
 
 class ToDoBase(BaseModel):
     title: str
@@ -12,6 +13,7 @@ class ToDoRead(ToDoBase):
     user_id: int
     todo_id: int
     done: bool
+    created: datetime
 
     class Config:
         orm_mode = True
