@@ -5,14 +5,13 @@ from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate
 from datetime import datetime, date
 from zoneinfo import ZoneInfo
 
-# import pytz
 
 def get_water_goal(db: Session, user_id:int):
   water_goal = db.query(WaterGoal).filter(WaterGoal.user_id == user_id).first()
   if not water_goal:
     return None
 
-  # tz = pytz.timezone("America/Sao_Paulo")
+
   now_local = datetime.now(ZoneInfo("America/Sao_Paulo"))
   today_local = now_local.date()
 
@@ -29,8 +28,8 @@ def get_water_goal_by_user(db: Session, user_id: int):
   return db.query(WaterGoal).filter(WaterGoal.user_id == user_id).first()
 
 
-def create_water_goal(db: Session, water_goal:WaterGoalCreate):
-  db_water_goal = WaterGoal(**water_goal.model_dump())
+def create_water_goal(db: Session, user_id: int, water_goal:WaterGoalCreate):
+  db_water_goal = WaterGoal(**water_goal.model_dump(), user_id = user_id)
   db.add(db_water_goal)
   db.commit()
   db.refresh(db_water_goal)

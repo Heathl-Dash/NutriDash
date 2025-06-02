@@ -8,7 +8,7 @@ class WaterGoalBase(BaseModel):
 
 
 class WaterGoalCreate(WaterGoalBase):
-    user_id: Optional[int] = None
+    pass
 
 
 class WaterGoalUpdate(BaseModel):
