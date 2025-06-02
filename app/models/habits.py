@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from app.db.database import Base
+from sqlalchemy.sql import func
+from datetime import datetime
 
 class Habit(Base):
     __tablename__ = "habits"
@@ -12,3 +14,4 @@ class Habit(Base):
     positive_count = Column(Integer, default=0)
     negative_count = Column(Integer, default=0)
     user_id = Column(Integer, nullable=False)
+    created = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)

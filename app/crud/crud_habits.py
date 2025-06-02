@@ -6,7 +6,7 @@ def get_habit(db: Session, habit_id: int):
   return db.query(Habit).filter(Habit.habit_id == habit_id).first()
 
 def get_habits(db:Session, user_id: int, skip: int = 0, limit: int = 100):
-  return db.query(Habit).filter(Habit.user_id == user_id).offset(skip).limit(limit).all()
+  return db.query(Habit).filter(Habit.user_id == user_id).order_by(Habit.created.desc()).offset(skip).limit(limit).all()
 
 
 def create_habit(db:Session, habit:HabitCreate, user_id: int):
