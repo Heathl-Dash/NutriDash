@@ -1,5 +1,8 @@
 from typing import Optional
 from pydantic import BaseModel
+from datetime import datetime
+from datetime import datetime
+
 
 class HabitBase(BaseModel):
     title: str
@@ -11,7 +14,9 @@ class HabitCreate(HabitBase):
     pass
 
 class HabitRead(HabitBase):
+    user_id: int
     habit_id: int
+    created: datetime
 
     class Config:
         orm_mode = True

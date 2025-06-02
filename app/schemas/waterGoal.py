@@ -1,4 +1,5 @@
 from typing import Optional, List
+from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -39,6 +40,7 @@ class WaterGoalRead(WaterGoalBase):
     water_goal_id: int
     ml_drinked: Optional[int] = None
     bottles: List[WaterBottleRead] = []
+    last_updated: datetime
 
     class Config:
         orm_mode = True

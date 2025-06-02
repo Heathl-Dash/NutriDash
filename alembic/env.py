@@ -3,7 +3,14 @@ from dotenv import load_dotenv
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
-from NutriDash.app.db.database import Base
+# from NutriDash.app.db.database import Base
+from app.db.database import Base
+target_metadata = Base.metadata
+import app.models.waterGoal
+import app.models.habits
+import app.models.todo
+
+
 
 load_dotenv()  
 
@@ -11,7 +18,6 @@ config = context.config
 
 fileConfig(config.config_file_name)
 
-target_metadata = Base.metadata
 
 config.set_main_option('sqlalchemy.url', os.getenv('DATABASE_URL'))
 

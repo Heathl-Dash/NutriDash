@@ -7,4 +7,5 @@ celery==5.5.2
 python-dotenv==1.0.1
 alembic==1.13.1
 redis==5.0.4
+PyJWT==2.10.1
 openai==1.23.0
