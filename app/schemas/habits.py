@@ -11,6 +11,7 @@ class HabitCreate(HabitBase):
     pass
 
 class HabitRead(HabitBase):
+    user_id: int
     habit_id: int
 
     class Config:

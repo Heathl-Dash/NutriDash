@@ -9,6 +9,7 @@ class ToDoCreate(ToDoBase):
     pass
 
 class ToDoRead(ToDoBase):
+    user_id: int
     todo_id: int
     done: bool
 
