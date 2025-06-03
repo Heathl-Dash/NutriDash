@@ -39,7 +39,7 @@ def update_water_bottle(water_bottle_id: int, water_bottle_data:WaterBottleUpdat
   return water_bottle
 
 
-@router.delete("/{water_bottle_id}", response_model=WaterBottleRead)
+@router.delete("/{water_bottle_id}", status_code=204)
 def delete_water_bottle(water_bottle_id:int, user_id: int = Depends(get_user_id), db: Session = Depends(get_db)):
   get_water_bottle_or_err(db, water_bottle_id, user_id)
   return crud_water_bottle.delete_water_bottle(db, water_bottle_id)
