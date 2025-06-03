@@ -4,16 +4,18 @@ from pydantic import BaseModel
 
 
 class WaterGoalBase(BaseModel):
-    ml_goal: int
+    pass
 
 
 class WaterGoalCreate(WaterGoalBase):
-    pass
+    ml_drinked: Optional[int] = None
+    weight: Optional[float] = None
 
 
 class WaterGoalUpdate(BaseModel):
     ml_goal: Optional[int] = None
     ml_drinked: Optional[int] = None
+    weight: Optional[float] = None
 
 
 class WaterBottleBase(BaseModel):
@@ -37,6 +39,7 @@ class WaterBottleUpdate(BaseModel):
 
 
 class WaterGoalRead(WaterGoalBase):
+    ml_goal: int
     water_goal_id: int
     ml_drinked: Optional[int] = None
     bottles: List[WaterBottleRead] = []
