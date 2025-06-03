@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app.models.waterGoal import WaterGoal
 from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate
 
+from fastapi import HTTPException
 from datetime import datetime, date
 from zoneinfo import ZoneInfo
 
@@ -10,6 +11,7 @@ def get_water_goal(db: Session, user_id:int):
   water_goal = db.query(WaterGoal).filter(WaterGoal.user_id == user_id).first()
   if not water_goal:
     return None
+
 
 
   now_local = datetime.now(ZoneInfo("America/Sao_Paulo"))
@@ -29,6 +31,10 @@ def get_water_goal_by_user(db: Session, user_id: int):
 
 
 def create_water_goal(db: Session, user_id: int, water_goal:WaterGoalCreate):
+  has_water_goal = get_water_goal_by_user(db, user_id)
+  if(has_water_goal):
+    raise HTTPException(status_code=400, detail="Water goal already exists for this user")
+
   db_water_goal = WaterGoal(**water_goal.model_dump(), user_id = user_id)
   db.add(db_water_goal)
   db.commit()
