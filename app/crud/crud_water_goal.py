@@ -12,8 +12,6 @@ def get_water_goal(db: Session, user_id:int):
   if not water_goal:
     return None
 
-
-
   now_local = datetime.now(ZoneInfo("America/Sao_Paulo"))
   today_local = now_local.date()
 
@@ -35,7 +33,14 @@ def create_water_goal(db: Session, user_id: int, water_goal:WaterGoalCreate):
   if(has_water_goal):
     raise HTTPException(status_code=400, detail="Water goal already exists for this user")
 
-  db_water_goal = WaterGoal(**water_goal.model_dump(), user_id = user_id)
+  if(water_goal.weight is not None and water_goal.weight > 0):
+    daily_goal = round(water_goal.weight * 35)
+  else:
+    daily_goal = 2000
+
+  data = water_goal.model_dump(exclude={"ml_goal", "weight"})
+
+  db_water_goal = WaterGoal(**data, user_id = user_id, ml_goal=daily_goal)
   db.add(db_water_goal)
   db.commit()
   db.refresh(db_water_goal)
