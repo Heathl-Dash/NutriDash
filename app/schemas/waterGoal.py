@@ -24,7 +24,7 @@ class WaterBottleBase(BaseModel):
 
 
 class WaterBottleCreate(WaterBottleBase):
-    user_id:int
+    pass
 
 class WaterBottleRead(WaterBottleBase):
     user_id:int
