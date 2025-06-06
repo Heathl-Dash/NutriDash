@@ -3,7 +3,7 @@ from app.models.waterGoal import WaterGoal
 from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate
 
 from fastapi import HTTPException
-from datetime import datetime, date
+from datetime import datetime
 from zoneinfo import ZoneInfo
 
 

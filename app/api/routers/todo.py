@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from typing import List
 from sqlalchemy.exc import SQLAlchemyError
@@ -13,17 +13,30 @@ from app.utils.todo import get_todo_or_err
 
 router = APIRouter(prefix="/todos", tags=["ToDos"])
 
-@router.get("/list", response_model=List[ToDoRead])
-def read_todos(user_id: int = Depends(get_user_id), skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+@router.get("/", response_model=List[ToDoRead])
+def read_todos(
+    user_id: int = Depends(get_user_id), 
+    skip: int = 0, 
+    limit: int = 100, 
+    db: Session = Depends(get_db)):
+
     return crud_todo.get_todos(db, user_id=user_id, skip=skip, limit=limit)
 
 @router.get("/{todo_id}", response_model = ToDoRead)
-def read_todo(todo_id: int, user_id = Depends(get_user_id), db: Session = Depends(get_db)):
+def read_todo(
+    todo_id: int, 
+    user_id = Depends(get_user_id), 
+    db: Session = Depends(get_db)):
+   
    todo = get_todo_or_err(db, todo_id, user_id)
    return todo
 
 @router.post("/", response_model=ToDoRead, status_code=201)
-def create_todo(todo: ToDoCreate, user_id: int = Depends(get_user_id), db: Session = Depends(get_db)):
+def create_todo(
+    todo: ToDoCreate, 
+    user_id: int = Depends(get_user_id), 
+    db: Session = Depends(get_db)):
+
     try:
         return crud_todo.create_todo(db, todo, user_id)
     except SQLAlchemyError as err:
@@ -32,7 +45,12 @@ def create_todo(todo: ToDoCreate, user_id: int = Depends(get_user_id), db: Sessi
         raise
 
 @router.patch("/{todo_id}", response_model=ToDoRead)
-def update_todo(todo_id: int, todo_data: ToDoUpdate, user_id: int = Depends(get_user_id), db: Session = Depends(get_db)):
+def update_todo(
+    todo_id: int, 
+    todo_data: ToDoUpdate, 
+    user_id: int = Depends(get_user_id), 
+    db: Session = Depends(get_db)):
+
     get_todo_or_err(db, todo_id, user_id)
     todo = crud_todo.update_todo(db, todo_id, todo_data)
     return todo
