@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from app.db.database import Base
 from sqlalchemy.sql import func
-from datetime import datetime
 
 class Habit(Base):
     __tablename__ = "habits"

@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Date, DateT
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.db.database import Base
-from datetime import datetime
 
 class ToDo(Base):
     __tablename__ = "to_dos"

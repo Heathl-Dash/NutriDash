@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from app.models.waterGoal import WaterBottle, WaterGoal
+from app.models.waterGoal import WaterBottle
 
-from app.schemas.waterGoal import WaterBottleCreate, WaterBottleRead, WaterBottleUpdate
+from app.schemas.waterGoal import WaterBottleCreate, WaterBottleUpdate
 
 from fastapi import HTTPException
 from app.crud.crud_water_goal import get_water_goal_by_user

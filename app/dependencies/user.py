@@ -5,9 +5,9 @@
 #         raise HTTPException(status_code=400, detail="X-User-Id não enviado")
 #     return x_user_id
 
-from fastapi import Depends, Request
+from fastapi import Request
 from app.utils.jwt import verify_token
-from fastapi import Header, HTTPException
+from fastapi import HTTPException
 
 def get_user_id(request: Request) -> int:
     auth_header = request.headers.get("Authorization")

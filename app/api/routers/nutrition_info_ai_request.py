@@ -16,7 +16,7 @@ client = openai.OpenAI(
     http_client=httpx.Client()
 )
 
-@router.post("/nutrition_info_ai_request")
+@router.post("/nutrition-info-ai-request")
 def ask_nutritional_info(data: AskAliment):
     system_prompt = (
         "Você é um especialista em nutrição. "
