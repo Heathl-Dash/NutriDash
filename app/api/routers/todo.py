@@ -41,3 +41,15 @@ def update_todo(todo_id: int, todo_data: ToDoUpdate, user_id: int = Depends(get_
 def delete_todo(todo_id: int, user_id: int = Depends(get_user_id), db: Session = Depends(get_db)):
     get_todo_or_err(db, todo_id, user_id)
     todo = crud_todo.delete_todo(db, todo_id)
+
+@router.patch("/{todo_id}/done-toggle", response_model=ToDoRead)
+def toggle_mark(
+    todo_id: int,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_user_id)
+):
+    todo = get_todo_or_err(db, todo_id, user_id)
+    todo.done = not todo.done
+    db.commit()
+    db.refresh(todo)
+    return todo
