@@ -14,6 +14,8 @@ class HabitCreate(HabitBase):
     pass
 
 class HabitRead(HabitBase):
+    positive_count:int
+    negative_count:int
     user_id: int
     habit_id: int
     created: datetime

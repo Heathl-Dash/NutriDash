@@ -42,3 +42,49 @@ def update_habit(habit_id: int, habit_data: HabitUpdate, user_id: int = Depends(
 def delete_habit(habit_id: int, user_id: int = Depends(get_user_id), db:Session = Depends(get_db)):
   get_habit_or_err(db, habit_id, user_id)
   habit = crud_habits.delete_habit(db, habit_id)
+
+@router.patch("/{habit_id}/add-positive-counter", response_model=HabitRead)
+def add_positive_count(
+  habit_id: int,
+  user_id: int = Depends(get_user_id),
+  db: Session = Depends(get_db)
+):
+  
+  habit = get_habit_or_err(db, habit_id, user_id)
+
+  if not habit.positive:
+    raise HTTPException(
+      status_code=400, 
+      detail=(
+        "Este hábito não aceita contagem positiva. "
+        "Apenas hábitos marcados como positivos ou mistos podem ter contagem positiva."
+      )
+    )
+  
+  habit.positive_count += 1
+  db.commit()
+  db.refresh(habit)
+  return habit
+
+
+@router.patch("/{habit_id}/add-negative-counter", response_model=HabitRead)
+def add_negative_count(
+    habit_id: int,
+    user_id: int = Depends(get_user_id),
+    db: Session = Depends(get_db)
+):
+    habit = get_habit_or_err(db, habit_id, user_id)
+
+    if not habit.negative:
+      raise HTTPException(
+        status_code=400, 
+        detail=(
+          "Este hábito não aceita contagem negativa. "
+          "Apenas hábitos marcados como negativos ou mistos podem ter contagem negativa."
+        )
+      )
+    
+    habit.negative_count += 1
+    db.commit()
+    db.refresh(habit)
+    return habit
