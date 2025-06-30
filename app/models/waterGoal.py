@@ -21,6 +21,26 @@ class WaterBottle(Base):
     ml_bottle = Column(Integer, nullable=False)
     user_id = Column(Integer, nullable=False)
 
-    
-
     goal = relationship("WaterGoal", back_populates="bottles")
+
+
+class WaterIntake(Base):
+    __tablename__= "water_intakes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    water_goal_id = Column(
+        Integer, 
+        ForeignKey("water_goals.water_goal_id"),
+        nullable=False
+    )
+    water_bottle_id = Column(
+        Integer, 
+        ForeignKey("water_bottles.water_bottle_id"), 
+        nullable=False
+    )
+    ml = Column(Integer, nullable=False)
+    timestamp = Column(DateTime, default=func.now())
+
+    goal = relationship("WaterGoal", backref="intakes")
+    bottle = relationship("WaterBottle")

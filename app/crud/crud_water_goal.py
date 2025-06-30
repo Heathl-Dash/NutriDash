@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.waterGoal import WaterGoal
-from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate
+from app.models.waterGoal import WaterGoal, WaterIntake
+from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate, WaterIntakeCreate
 
 from fastapi import HTTPException
 from datetime import datetime
@@ -69,3 +69,23 @@ def delete_water_goal(db: Session, user_id):
   db.delete(db_water_goal)
   db.commit()
   return db_water_goal
+
+
+def create_intake(
+    db: Session, 
+    intake_data: WaterIntakeCreate, 
+    user_id:int
+):
+  intake = WaterIntake(**intake_data.model_dump(), user_id=user_id)
+  db.add(intake)
+  db.commit()
+  db.refresh(intake)
+  return intake
+
+
+def get_intakes_by_user(db: Session, user_id: int):
+    return db.query(WaterIntake).filter(WaterIntake.user_id == user_id).all()
+
+
+def get_intakes_by_goal(db: Session, goal_id: int):
+    return db.query(WaterIntake).filter(WaterIntake.water_goal_id == goal_id).all()

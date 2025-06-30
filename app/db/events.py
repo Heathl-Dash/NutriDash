@@ -1,8 +1,8 @@
 from sqlalchemy import event
-from sqlalchemy.orm import Session, object_session
+from sqlalchemy.orm import Session
 from app.models.waterGoal import WaterGoal
 from app.models.waterGoalLog import WaterGoalLog
-from app.utils.serializers import serialize_model
+from app.utils.serializers import serialize_model, serialize_model_from_dict
 import copy
 
 
@@ -54,7 +54,7 @@ def receive_after_flush(session, flush_context):
                 session=session,
                 action="update",
                 instance=obj,
-                old_data=old_data,
+                old_data=serialize_model_from_dict(getattr(obj, "_old_state", {})),
                 new_data=serialize_model(obj),
             )
             # Remover para liberar memória
