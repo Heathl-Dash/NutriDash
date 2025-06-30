@@ -11,7 +11,7 @@ from app.dependencies.user import get_user_id
 from app.utils.todo import get_todo_or_err
 
 
-router = APIRouter(prefix="/todos", tags=["ToDos"])
+router = APIRouter()
 
 @router.get("/", response_model=List[ToDoRead])
 def read_todos(
