@@ -19,6 +19,7 @@ services:
     networks:
       - nutridashboard-rede
       - nutri_dash
+      - rabbit_net
 
   nutriDash_db:
     image: postgres:17.5
@@ -65,6 +66,14 @@ services:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
     networks:
       - nutridashboard-rede
+  
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"     
+      - "15672:15672"
+    networks:
+      - rabbit_net
 
 volumes:
   nutri_dash_postgres_data:
@@ -75,4 +84,7 @@ networks:
   nutridashboard-rede:
     external: true
     name: nutridashboard-rede
+  rabbit_net:
+    external: true
+  
   
