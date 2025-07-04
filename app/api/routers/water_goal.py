@@ -14,7 +14,7 @@ from app.db.database import get_db
 from app.dependencies.user import get_user_id
 from app.utils.water_goal import get_water_goal_or_err
 
-router = APIRouter(prefix="/water_goal", tags=["WaterGoal"])
+router = APIRouter()
 
 @router.get("/", response_model=WaterGoalRead, status_code=201)
 def read_water_goal(

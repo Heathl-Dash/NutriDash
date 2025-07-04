@@ -10,7 +10,7 @@ from app.db.database import get_db
 from app.dependencies.user import get_user_id
 from app.utils.water_bottle import get_water_bottle_or_err
 
-router = APIRouter(prefix="/water_bottle", tags=["WaterBottle"])
+router = APIRouter()
 
 @router.get("/", response_model=List[WaterBottleRead], status_code=200)
 def read_water_bottles(

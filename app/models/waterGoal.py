@@ -1,4 +1,12 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, func
+from sqlalchemy import (
+    Column, 
+    Integer, 
+    String, 
+    ForeignKey, 
+    DateTime, 
+    func, 
+    text
+)
 from sqlalchemy.orm import relationship
 from app.db.database import Base
 
@@ -20,6 +28,13 @@ class WaterBottle(Base):
     bottle_name = Column(String, nullable=False)
     ml_bottle = Column(Integer, nullable=False)
     user_id = Column(Integer, nullable=False)
+    id_bottle_style = Column(
+        Integer, 
+        nullable=False, 
+        default=1, 
+        server_default=text("1")
+    )
+
 
     goal = relationship("WaterGoal", back_populates="bottles")
 

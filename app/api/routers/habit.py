@@ -7,13 +7,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.schemas.habits import HabitCreate, HabitRead, HabitUpdate
 from app.crud import crud_habits
 from app.db.database import get_db
-
 from app.dependencies.user import get_user_id
 from app.utils.habits import get_habit_or_err
 
-router = APIRouter(prefix="/habits", tags=["Habits"])
+habit_router =  APIRouter()
 
-@router.get("/", response_model=List[HabitRead])
+@habit_router.get("/", response_model=List[HabitRead])
 def read_habits(
   user_id: int = Depends(get_user_id),
   skip: int = 0, 
@@ -33,7 +32,7 @@ def read_habits(
   )
 
 
-@router.post("/", response_model=HabitRead, status_code=201)
+@habit_router.post("/", response_model=HabitRead, status_code=201)
 def create_habit(
   habit: HabitCreate, 
   user_id: int = Depends(get_user_id), 
@@ -46,7 +45,7 @@ def create_habit(
     print(f"[ERRO] Erro ao criar HABITO: {err}")
     raise
   
-@router.get("/{habit_id}", response_model = HabitRead)
+@habit_router.get("/{habit_id}", response_model = HabitRead)
 def read_habit(
   habit_id: int, 
   user_id: int = Depends(get_user_id), 
@@ -56,7 +55,7 @@ def read_habit(
   habit = crud_habits.get_habit(db, habit_id)
   return habit
 
-@router.patch("/{habit_id}", response_model=HabitRead)
+@habit_router.patch("/{habit_id}", response_model=HabitRead)
 def update_habit(
   habit_id: int, 
   habit_data: HabitUpdate, 
@@ -68,7 +67,7 @@ def update_habit(
   return habit
   
 
-@router.delete("/{habit_id}",  status_code=204)
+@habit_router.delete("/{habit_id}",  status_code=204)
 def delete_habit(
   habit_id: int, 
   user_id: int = Depends(get_user_id), 
@@ -77,7 +76,7 @@ def delete_habit(
   get_habit_or_err(db, habit_id, user_id)
   habit = crud_habits.delete_habit(db, habit_id)
 
-@router.patch("/{habit_id}/add-positive-counter", response_model=HabitRead)
+@habit_router.patch("/{habit_id}/add-positive-counter", response_model=HabitRead)
 def add_positive_count(
   habit_id: int,
   user_id: int = Depends(get_user_id),
@@ -101,7 +100,7 @@ def add_positive_count(
   return habit
 
 
-@router.patch("/{habit_id}/add-negative-counter", response_model=HabitRead)
+@habit_router.patch("/{habit_id}/add-negative-counter", response_model=HabitRead)
 def add_negative_count(
     habit_id: int,
     user_id: int = Depends(get_user_id),
