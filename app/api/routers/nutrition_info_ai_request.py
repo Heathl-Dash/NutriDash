@@ -12,8 +12,8 @@ load_dotenv()
 router = APIRouter()
 
 client = OpenAI(
-    api_key=os.getenv("OPENROUTER_API_KEY"),
-    base_url="https://openrouter.ai/api/v1"
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
 @router.post("/nutrition-info-ai-request")
@@ -44,7 +44,7 @@ def ask_nutritional_info(data: AskAliment):
         cleaned_json = re.sub(
             r"```json\s*(.*?)```", r"\1",
             text_answer,
-            flags=re.DOTALL 
+            flags=re.DOTALL
         ).strip()
         try:
             return json.loads(cleaned_json)

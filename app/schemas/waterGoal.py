@@ -27,6 +27,7 @@ class WaterBottleCreate(WaterBottleBase):
     pass
 
 class WaterBottleRead(WaterBottleBase):
+    id_bottle_style: int
     user_id:int
     water_bottle_id: int
 
