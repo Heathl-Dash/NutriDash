@@ -1,8 +1,9 @@
 from sqlalchemy import event
-from sqlalchemy.orm import Session, object_session
+from sqlalchemy.orm import Session
 from app.models.waterGoal import WaterGoal
 from app.models.waterGoalLog import WaterGoalLog
 from app.utils.serializers import serialize_model
+from fastapi.encoders import jsonable_encoder
 import copy
 
 
@@ -13,8 +14,8 @@ def log_water_goal_change(session, action, instance, old_data=None, new_data=Non
         action=action,
         water_goal_id=instance.water_goal_id,
         user_id=instance.user_id,
-        old_data=old_data,
-        new_data=new_data,
+        old_data=jsonable_encoder(old_data) if old_data else None,
+        new_data=jsonable_encoder(new_data) if new_data else None,
     )
     session.add(log)
 
