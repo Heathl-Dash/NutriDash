@@ -2,14 +2,14 @@ services:
   nutri_web:
     build: .
     container_name: nutri_web
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: ./start.sh
     volumes:
       - .:/app
     ports:
       - "8001:8000"
     depends_on:
       - nutriDash_db
-      - redis
+      - rabbitmq
     env_file:
       - .env
     environment:
@@ -43,35 +43,15 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:7
-    container_name: redis_broker
-    ports:
-      - "6379:6379"
-    networks:
-      - nutridashboard-rede
-      - nutri_dash
-
-  celery:
-    build: .
-    container_name: celery_worker
-    command: celery -A app.worker worker --loglevel=info
-    volumes:
-      - .:/app
-    depends_on:
-      - redis
-      - nutriDash_db
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-    networks:
-      - nutridashboard-rede
-  
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
       - "5672:5672"     
       - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
       - rabbit_net
 
