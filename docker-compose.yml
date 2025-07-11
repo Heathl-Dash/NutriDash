@@ -5,6 +5,7 @@ services:
     command: ./start.sh
     volumes:
       - .:/app
+      - ./backups:/app/db/backups
     ports:
       - "8001:8000"
     depends_on:
@@ -16,6 +17,11 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - PYTHONPATH=/app
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
     networks:
       - nutridashboard-rede
       - nutri_dash

@@ -2,6 +2,14 @@ FROM python:3.12
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y wget gnupg2 lsb-release \
+    && echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgres-archive-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && apt-get update \
+    && apt-get install -y postgresql-client-17 \
+    && apt-get clean
+
 COPY requirements.txt .
 
 RUN pip install --upgrade pip
