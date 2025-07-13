@@ -13,4 +13,4 @@ class Habit(Base):
     positive_count = Column(Integer, default=0)
     negative_count = Column(Integer, default=0)
     user_id = Column(Integer, nullable=False)
-    created = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
+    created = Column(DateTime, default=func.now(), nullable=False)
