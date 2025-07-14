@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 nutriRouter.include_router(todo.router, prefix="/todo", tags=["ToDo"])
-nutriRouter.include_router(habit.habit_router, prefix="/habits", tags=["Habits"])
+nutriRouter.include_router(habit.habit_router, prefix="/habit", tags=["Habits"])
 nutriRouter.include_router(water_goal.router, prefix="/water_goal", tags=["Water Goals"])
 nutriRouter.include_router(water_bottle.router, prefix="/water_bottle", tags=["Water Bottles"])
 nutriRouter.include_router(nutrition_info_ai_request.router, tags=["Nutrition Info AI"])

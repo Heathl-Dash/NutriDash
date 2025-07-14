@@ -4,7 +4,7 @@ from app.schemas.habits import HabitCreate, HabitUpdate
 from fastapi import HTTPException
 
 def get_habit(db: Session, habit_id: int):
-  return db.query(Habit).filter(Habit.habit_id == habit_id).first()
+  return db.query(Habit).filter(Habit.id == habit_id).first()
 
 def get_habits(db:Session, user_id: int, skip: int = 0, limit: int = 100):
   return db.query(Habit).filter(

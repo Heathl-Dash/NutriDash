@@ -3,7 +3,7 @@ from app.models.todo import ToDo
 from app.schemas.todo import ToDoCreate, ToDoUpdate
 
 def get_todo(db: Session, todo_id:int):
-    return db.query(ToDo).filter(ToDo.todo_id == todo_id).first()
+    return db.query(ToDo).filter(ToDo.id == todo_id).first()
 
 def get_todos(db: Session, user_id: int, skip: int = 0, limit: int = 100):
     return db.query(ToDo).filter(

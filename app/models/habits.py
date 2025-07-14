@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 class Habit(Base):
     __tablename__ = "habits"
 
-    habit_id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     description = Column(String, nullable=False, default="")
     positive = Column(Boolean, default=False)
