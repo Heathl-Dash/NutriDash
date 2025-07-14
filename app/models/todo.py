@@ -5,7 +5,7 @@ from app.db.database import Base
 
 class ToDo(Base):
     __tablename__ = "to_dos"
-    todo_id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     description = Column(String, nullable=False, default="")
     done = Column(Boolean, default=False)
@@ -17,7 +17,7 @@ class ToDo(Base):
 class ToDohistory(Base):
     __tablename__ = "to_do_histories"
     to_do_history_id = Column(Integer, primary_key=True, index=True)
-    todo_id = Column(Integer, ForeignKey("to_dos.todo_id"), nullable=False)
+    todo_id = Column(Integer, ForeignKey("to_dos.id"), nullable=False)
     date_done = Column(Date, default=func.current_date())
 
     todo = relationship("ToDo", back_populates="histories")
