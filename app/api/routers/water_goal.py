@@ -2,7 +2,13 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.schemas.waterGoal import WaterGoalRead, WaterGoalCreate, WaterGoalUpdate
+from app.schemas.waterGoal import (
+  WaterGoalRead, 
+  WaterGoalCreate, 
+  WaterGoalUpdate,
+  WaterIntakeRead,
+  WaterIntakeCreate
+)
 from app.crud import crud_water_goal
 from app.db.database import get_db
 from app.dependencies.user import get_user_id
@@ -49,3 +55,20 @@ def delete_water_goal(
     get_water_goal_or_err(db, user_id)
     water_goal = crud_water_goal.delete_water_goal(db, user_id)
     return water_goal
+
+
+@router.post("/intakes/", response_model=WaterIntakeRead)
+def register_intake(
+    intake_data: WaterIntakeCreate,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_user_id),
+):
+    return crud_water_goal.create_intake(db, intake_data, user_id)
+
+
+@router.get("/intakes/", response_model=list[WaterIntakeRead])
+def list_user_intakes(
+    user_id: int = Depends(get_user_id), 
+    db: Session = Depends(get_db)
+):
+    return crud_water_goal.get_intakes_by_user(db, user_id)

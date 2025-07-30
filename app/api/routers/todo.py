@@ -3,7 +3,13 @@ from sqlalchemy.orm import Session
 from typing import List
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.schemas.todo import ToDoCreate, ToDoRead, ToDoUpdate
+from app.schemas.todo import (
+    ToDoCreate, 
+    ToDoRead, 
+    ToDoUpdate,
+    TodoHistoryRead,
+    ToDoHistoryCreate,
+)
 from app.crud import crud_todo
 from app.db.database import get_db
 
@@ -21,6 +27,15 @@ def read_todos(
     db: Session = Depends(get_db)):
 
     return crud_todo.get_todos(db, user_id=user_id, skip=skip, limit=limit)
+
+@router.get("/history", response_model=List[TodoHistoryRead])
+def get_todo_history(
+    user_id: int = Depends(get_user_id),
+    db: Session = Depends(get_db) 
+):
+
+    history = crud_todo.list_by_user(db, user_id)
+    return history
 
 @router.get("/{todo_id}", response_model = ToDoRead)
 def read_todo(
@@ -67,7 +82,17 @@ def toggle_mark(
     user_id: int = Depends(get_user_id)
 ):
     todo = get_todo_or_err(db, todo_id, user_id)
-    todo.done = not todo.done
-    db.commit()
-    db.refresh(todo)
-    return todo
+    existing = crud_todo.get_today_entry(db, todo_id)
+
+    if existing:
+        crud_todo.delete_history(db, todo_id)
+        todo.done = False
+        db.commit()
+        db.refresh(todo)
+        return todo
+    else:
+        crud_todo.create_history(db, todo_id, user_id)
+        todo.done = True
+        db.commit()
+        db.refresh(todo)
+        return todo

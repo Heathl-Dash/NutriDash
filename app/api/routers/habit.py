@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Query
+from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.schemas.habits import HabitCreate, HabitRead, HabitUpdate
@@ -15,10 +16,21 @@ habit_router =  APIRouter()
 def read_habits(
   user_id: int = Depends(get_user_id),
   skip: int = 0, 
-  limit: int = 100, 
-  db: Session = Depends(get_db)):
+  limit: int = 100,
+  positive: Optional[bool] = Query(None),
+  negative: Optional[bool] = Query(None),
+  db: Session = Depends(get_db)
+):
 
-  return crud_habits.get_habits(db, user_id=user_id, skip=skip, limit=limit)
+  return crud_habits.get_habits(
+    db, 
+    user_id=user_id, 
+    skip=skip, 
+    limit=limit,
+    positive=positive,
+    negative=negative,
+  )
+
 
 @habit_router.post("/", response_model=HabitRead, status_code=201)
 def create_habit(

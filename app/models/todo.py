@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Date, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.db.database import Base
@@ -18,6 +18,7 @@ class ToDohistory(Base):
     __tablename__ = "to_do_histories"
     to_do_history_id = Column(Integer, primary_key=True, index=True)
     todo_id = Column(Integer, ForeignKey("to_dos.id"), nullable=False)
-    date_done = Column(Date, default=func.current_date())
+    user_id = Column(Integer, nullable=False)
+    date_done = Column(DateTime, default=func.now())
 
     todo = relationship("ToDo", back_populates="histories")

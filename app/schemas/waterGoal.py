@@ -49,3 +49,22 @@ class WaterGoalRead(WaterGoalBase):
 
     class Config:
         orm_mode = True
+
+class WaterIntakeBase(BaseModel):
+    water_goal_id: int
+    water_bottle_id: int
+    ml: int
+
+class WaterIntakeCreate(WaterIntakeBase):
+    pass
+
+class WaterIntakeRead(BaseModel):
+    id: int
+    user_id: int
+    water_goal_id: int
+    water_bottle_id: int
+    ml: int
+    timestamp: datetime
+
+    class Config:
+        orm_mode = True
