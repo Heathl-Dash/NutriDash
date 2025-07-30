@@ -53,7 +53,7 @@ def create_todo(
     db: Session = Depends(get_db)):
 
     try:
-        return crud_todo.create_todo(db, todo, user_id)
+        return crud_todo.create_todo(db, todo, user_id) 
     except SQLAlchemyError as err:
         db.rollback()
         print(f"[ERRO] Erro ao criar TODO: {err}")

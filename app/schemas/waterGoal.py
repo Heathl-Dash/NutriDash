@@ -21,15 +21,15 @@ class WaterGoalUpdate(BaseModel):
 class WaterBottleBase(BaseModel):
     bottle_name: str
     ml_bottle: int
-
+    id_bottle_style: Optional[int] = None
 
 class WaterBottleCreate(WaterBottleBase):
     pass
 
 class WaterBottleRead(WaterBottleBase):
-    id_bottle_style: int
-    user_id:int
     water_bottle_id: int
+    user_id:int
+    id_bottle_style: int
 
     class Config:
         orm_mode = True
@@ -37,6 +37,7 @@ class WaterBottleRead(WaterBottleBase):
 class WaterBottleUpdate(BaseModel):
     bottle_name: Optional[str] = None
     ml_bottle: Optional[int] = None
+    id_bottle_style: int
 
 
 class WaterGoalRead(WaterGoalBase):

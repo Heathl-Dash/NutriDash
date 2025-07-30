@@ -11,7 +11,7 @@ class ToDoCreate(ToDoBase):
 
 class ToDoRead(ToDoBase):
     user_id: int
-    todo_id: int
+    id: int
     done: bool
     created: datetime
 

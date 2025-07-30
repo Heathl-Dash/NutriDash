@@ -1,4 +1,3 @@
-# app/utils/jwt.py
 import jwt
 from fastapi import HTTPException, status
 from jwt import PyJWTError

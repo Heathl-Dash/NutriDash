@@ -2,9 +2,10 @@ from sqlalchemy.orm import Session
 from typing import Optional
 from app.models.habits import Habit
 from app.schemas.habits import HabitCreate, HabitUpdate
+from fastapi import HTTPException
 
 def get_habit(db: Session, habit_id: int):
-  return db.query(Habit).filter(Habit.habit_id == habit_id).first()
+  return db.query(Habit).filter(Habit.id == habit_id).first()
 
 def get_habits(
     db:Session, 
@@ -28,6 +29,12 @@ def get_habits(
   ).offset(skip).limit(limit).all()
 
 def create_habit(db:Session, habit:HabitCreate, user_id: int):
+  if habit.negative == False and habit.positive == False:
+    raise HTTPException(
+      status_code=400,
+      detail="O hábito tem que ser marcado como positivo e/ou negativo."
+    )
+
   db_habit = Habit(**habit.model_dump(), user_id = user_id)
   db.add(db_habit)
   db.commit()
