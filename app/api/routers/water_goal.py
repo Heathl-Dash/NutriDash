@@ -7,12 +7,14 @@ from app.schemas.waterGoal import (
   WaterGoalCreate, 
   WaterGoalUpdate,
   WaterIntakeRead,
-  WaterIntakeCreate
+  WaterIntakeCreate,
+  WaterIntakeSummary
 )
 from app.crud import crud_water_goal
 from app.db.database import get_db
 from app.dependencies.user import get_user_id
 from app.utils.water_goal import get_water_goal_or_err
+from datetime import date
 
 router = APIRouter()
 
@@ -66,9 +68,10 @@ def register_intake(
     return crud_water_goal.create_intake(db, intake_data, user_id)
 
 
-@router.get("/intakes/", response_model=list[WaterIntakeRead])
+@router.get("/intakes/", response_model=list[WaterIntakeSummary])
 def list_user_intakes(
     user_id: int = Depends(get_user_id), 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    reference: date = None
 ):
-    return crud_water_goal.get_intakes_by_user(db, user_id)
+    return crud_water_goal.get_intakes_sum_week(db, user_id, reference)

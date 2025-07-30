@@ -68,3 +68,7 @@ class WaterIntakeRead(BaseModel):
 
     class Config:
         orm_mode = True
+
+class WaterIntakeSummary(BaseModel):
+    date: str
+    total_ml: int
