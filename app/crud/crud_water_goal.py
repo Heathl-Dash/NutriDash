@@ -3,9 +3,9 @@ from app.models.waterGoal import WaterGoal, WaterIntake
 from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate, WaterIntakeCreate
 
 from fastapi import HTTPException
-from datetime import datetime
+from datetime import datetime, timedelta, date
 from zoneinfo import ZoneInfo
-
+from collections import defaultdict
 
 def get_water_goal(db: Session, user_id:int):
   water_goal = db.query(WaterGoal).filter(WaterGoal.user_id == user_id).first()
@@ -81,6 +81,39 @@ def create_intake(
   db.commit()
   db.refresh(intake)
   return intake
+
+def get_week_range(reference: datetime = None):
+    if reference is None:
+        reference = date.today()
+
+    start = reference - timedelta(days=reference.weekday())  
+    end = start + timedelta(days=6)  
+
+    start = datetime.combine(start, datetime.min.time())
+    end = datetime.combine(end, datetime.max.time())
+    
+    return start, end
+
+
+def get_intakes_sum_week(db: Session, user_id: int, reference: date = None):
+  start, end = get_week_range(reference)
+  results = db.query(WaterIntake).filter(
+      WaterIntake.user_id == user_id,
+      WaterIntake.timestamp >= start,
+      WaterIntake.timestamp <= end 
+  ).all()
+  daily_totals = defaultdict(int)
+  for entry in results:
+      day = entry.timestamp.date()
+      daily_totals[day] += entry.ml
+  week_data = []
+  for i in range(7):
+      day = (start + timedelta(days=i)).date()
+      week_data.append({
+          "date": day.isoformat(),
+          "total_ml": daily_totals[day]
+      })
+  return week_data
 
 
 def get_intakes_by_user(db: Session, user_id: int):
