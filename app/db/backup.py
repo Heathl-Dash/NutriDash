@@ -1,5 +1,5 @@
-import os
 import datetime
+import os
 import subprocess
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -10,6 +10,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
+
 
 def run_dump():
     os.makedirs(BACKUP_DIR, exist_ok=True)
@@ -23,16 +24,22 @@ def run_dump():
     try:
         subprocess.run(
             [
-            "pg_dump",
-            "-U", DB_USER,
-            "-h", DB_HOST,
-            "-p", DB_PORT,
-            "-d", DB_NAME,
-            "-F", "p",  
-            "-f", dump_path
+                "pg_dump",
+                "-U",
+                DB_USER,
+                "-h",
+                DB_HOST,
+                "-p",
+                DB_PORT,
+                "-d",
+                DB_NAME,
+                "-F",
+                "p",
+                "-f",
+                dump_path,
             ],
             check=True,
-            env=env
+            env=env,
         )
         print(f"✔ Backup feito com sucesso: {dump_path}")
         return dump_path

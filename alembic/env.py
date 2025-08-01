@@ -1,25 +1,28 @@
 import os
-from dotenv import load_dotenv
-from alembic import context
-from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
+
+from dotenv import load_dotenv
+from sqlalchemy import engine_from_config, pool
+
+from alembic import context
+
 # from NutriDash.app.db.database import Base
 from app.db.database import Base
+
 target_metadata = Base.metadata
-import app.models.waterGoal
 import app.models.habits
 import app.models.todo
+import app.models.waterGoal
 
-
-
-load_dotenv()  
+load_dotenv()
 
 config = context.config
 
 fileConfig(config.config_file_name)
 
 
-config.set_main_option('sqlalchemy.url', os.getenv('DATABASE_URL'))
+config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+
 
 def run_migrations_offline():
     url = config.get_main_option("sqlalchemy.url")
@@ -27,10 +30,11 @@ def run_migrations_offline():
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={"paramstyle": "named"}
+        dialect_opts={"paramstyle": "named"},
     )
     with context.begin_transaction():
         context.run_migrations()
+
 
 def run_migrations_online():
     connectable = engine_from_config(
@@ -42,6 +46,7 @@ def run_migrations_online():
         context.configure(connection=connection, target_metadata=target_metadata)
         with context.begin_transaction():
             context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()

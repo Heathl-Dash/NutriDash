@@ -1,27 +1,30 @@
+from datetime import datetime
 from typing import Optional
+
 from pydantic import BaseModel
-from datetime import datetime
-from datetime import datetime
 
 
 class HabitBase(BaseModel):
     title: str
     description: str
-    positive: bool  
+    positive: bool
     negative: bool
+
 
 class HabitCreate(HabitBase):
     pass
 
+
 class HabitRead(HabitBase):
-    positive_count:int
-    negative_count:int
+    positive_count: int
+    negative_count: int
     user_id: int
     id: int
     created: datetime
 
     class Config:
         orm_mode = True
+
 
 class HabitUpdate(HabitBase):
     title: Optional[str] = None

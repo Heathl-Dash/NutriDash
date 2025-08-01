@@ -1,59 +1,63 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import SQLAlchemyError
+from datetime import date
 
-from app.schemas.waterGoal import (
-  WaterGoalRead, 
-  WaterGoalCreate, 
-  WaterGoalUpdate,
-  WaterIntakeRead,
-  WaterIntakeCreate,
-  WaterIntakeSummary
-)
+from fastapi import APIRouter, Depends
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
+
 from app.crud import crud_water_goal
 from app.db.database import get_db
 from app.dependencies.user import get_user_id
+from app.schemas.waterGoal import (
+    WaterGoalCreate,
+    WaterGoalRead,
+    WaterGoalUpdate,
+    WaterIntakeCreate,
+    WaterIntakeRead,
+    WaterIntakeSummary,
+)
 from app.utils.water_goal import get_water_goal_or_err
-from datetime import date
 
 router = APIRouter()
 
+
 @router.get("/", response_model=WaterGoalRead, status_code=201)
-def read_water_goal(
-  user_id: int = Depends(get_user_id), 
-  db: Session = Depends(get_db)):
+def read_water_goal(user_id: int = Depends(get_user_id), db: Session = Depends(get_db)):
 
     return get_water_goal_or_err(db, user_id)
 
+
 @router.post("/", response_model=WaterGoalRead, status_code=201)
 def create_water(
-  water_goal:WaterGoalCreate, 
-  user_id: int = Depends(get_user_id), 
-  db: Session = Depends(get_db)):
-    
+    water_goal: WaterGoalCreate,
+    user_id: int = Depends(get_user_id),
+    db: Session = Depends(get_db),
+):
+
     try:
-      return crud_water_goal.create_water_goal(db, user_id, water_goal)
+        return crud_water_goal.create_water_goal(db, user_id, water_goal)
     except SQLAlchemyError as err:
-      db.rollback()
-      print(f"[ERRO] Erro ao criar WATER GOAL: {err}")
-      raise
+        db.rollback()
+        print(f"[ERRO] Erro ao criar WATER GOAL: {err}")
+        raise
+
 
 @router.patch("/", response_model=WaterGoalRead, status_code=201)
 def update_water_goal(
-  water_goal_data:WaterGoalUpdate, 
-  user_id: int = Depends(get_user_id), 
-  db:Session = Depends(get_db)):
-    
+    water_goal_data: WaterGoalUpdate,
+    user_id: int = Depends(get_user_id),
+    db: Session = Depends(get_db),
+):
+
     get_water_goal_or_err(db, user_id)
     water_goal = crud_water_goal.update_water_goal(db, user_id, water_goal_data)
     return water_goal
-  
+
 
 @router.delete("/", status_code=204)
 def delete_water_goal(
-   user_id: int = Depends(get_user_id), 
-   db: Session = Depends(get_db)):
-    
+    user_id: int = Depends(get_user_id), db: Session = Depends(get_db)
+):
+
     get_water_goal_or_err(db, user_id)
     water_goal = crud_water_goal.delete_water_goal(db, user_id)
     return water_goal
@@ -70,8 +74,8 @@ def register_intake(
 
 @router.get("/intakes/", response_model=list[WaterIntakeSummary])
 def list_user_intakes(
-    user_id: int = Depends(get_user_id), 
+    user_id: int = Depends(get_user_id),
     db: Session = Depends(get_db),
-    reference: date = None
+    reference: date = None,
 ):
     return crud_water_goal.get_intakes_sum_week(db, user_id, reference)

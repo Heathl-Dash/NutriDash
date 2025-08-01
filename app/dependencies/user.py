@@ -1,6 +1,7 @@
-from fastapi import Request
+from fastapi import HTTPException, Request
+
 from app.utils.jwt import verify_token
-from fastapi import HTTPException
+
 
 def get_user_id(request: Request) -> int:
     auth_header = request.headers.get("Authorization")

@@ -1,10 +1,12 @@
-import os
 import json
 import logging
-from fastapi import APIRouter, HTTPException
+import os
+
 from dotenv import load_dotenv
-from app.schemas.askAliment import AskAliment
+from fastapi import APIRouter, HTTPException
 from openai import OpenAI
+
+from app.schemas.askAliment import AskAliment
 from app.utils.system_prompt import SYSTEM_PROMPT
 
 load_dotenv()
@@ -12,6 +14,7 @@ load_dotenv()
 router = APIRouter()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 
 @router.post("/nutrition-info-ai-request")
 def ask_nutritional_info(data: AskAliment):
@@ -34,11 +37,8 @@ def ask_nutritional_info(data: AskAliment):
         except json.JSONDecodeError:
             raise HTTPException(
                 status_code=502,
-                detail="Resposta do modelo não está em formato JSON válido"
+                detail="Resposta do modelo não está em formato JSON válido",
             )
     except Exception as e:
         logging.error(f"Erro ao chamar OpenAI: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail="Erro ao consultar o modelo de IA."
-        )
+        raise HTTPException(status_code=500, detail="Erro ao consultar o modelo de IA.")

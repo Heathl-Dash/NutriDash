@@ -1,10 +1,12 @@
+import copy
+
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy import event
 from sqlalchemy.orm import Session
+
 from app.models.waterGoal import WaterGoal
 from app.models.waterGoalLog import WaterGoalLog
 from app.utils.serializers import serialize_model, serialize_model_from_dict
-from fastapi.encoders import jsonable_encoder
-import copy
 
 
 def log_water_goal_change(session, action, instance, old_data=None, new_data=None):
@@ -24,9 +26,12 @@ def log_water_goal_change(session, action, instance, old_data=None, new_data=Non
 def receive_before_flush(session, flush_context, instances=None):
     # Guardar estado antigo para objetos alterados
     for obj in session.dirty:
-        if isinstance(obj, WaterGoal) and session.is_modified(obj, include_collections=False):
+        if isinstance(obj, WaterGoal) and session.is_modified(
+            obj, include_collections=False
+        ):
             # Copia profunda do estado antigo antes de flush
-            # Podemos pegar dados do banco para garantir que seja o estado antes da modificação
+            # Podemos pegar dados do banco para 
+            # garantir que seja o estado antes da modificação
             # Ou pegar do __dict__ (menos seguro se houver alteração prévia)
             old_state = {}
             for column in obj.__table__.columns:
@@ -49,7 +54,9 @@ def receive_after_flush(session, flush_context):
             )
 
     for obj in session.dirty:
-        if isinstance(obj, WaterGoal) and session.is_modified(obj, include_collections=False):
+        if isinstance(obj, WaterGoal) and session.is_modified(
+            obj, include_collections=False
+        ):
             old_data = getattr(obj, "_old_state", {})
             log_water_goal_change(
                 session=session,

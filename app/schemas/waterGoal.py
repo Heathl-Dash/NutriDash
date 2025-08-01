@@ -1,5 +1,6 @@
-from typing import Optional, List
 from datetime import datetime
+from typing import List, Optional
+
 from pydantic import BaseModel
 
 
@@ -23,16 +24,19 @@ class WaterBottleBase(BaseModel):
     ml_bottle: int
     id_bottle_style: Optional[int] = None
 
+
 class WaterBottleCreate(WaterBottleBase):
     pass
 
+
 class WaterBottleRead(WaterBottleBase):
     water_bottle_id: int
-    user_id:int
+    user_id: int
     id_bottle_style: int
 
     class Config:
         orm_mode = True
+
 
 class WaterBottleUpdate(BaseModel):
     bottle_name: Optional[str] = None
@@ -50,13 +54,16 @@ class WaterGoalRead(WaterGoalBase):
     class Config:
         orm_mode = True
 
+
 class WaterIntakeBase(BaseModel):
     water_goal_id: int
     water_bottle_id: int
     ml: int
 
+
 class WaterIntakeCreate(WaterIntakeBase):
     pass
+
 
 class WaterIntakeRead(BaseModel):
     id: int
@@ -68,6 +75,7 @@ class WaterIntakeRead(BaseModel):
 
     class Config:
         orm_mode = True
+
 
 class WaterIntakeSummary(BaseModel):
     date: str
