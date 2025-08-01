@@ -1,6 +1,9 @@
-from sqlalchemy import Column, Integer, String, DateTime, JSON
 from datetime import datetime, timezone
+
+from sqlalchemy import JSON, Column, DateTime, Integer, String
+
 from app.db.database import Base
+
 
 class WaterGoalLog(Base):
     __tablename__ = "water_goal_logs"

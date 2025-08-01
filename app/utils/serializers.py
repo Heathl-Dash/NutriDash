@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from sqlalchemy.orm import DeclarativeMeta
+
 
 def serialize_model(model):
     if not isinstance(model.__class__, DeclarativeMeta):
@@ -14,9 +16,10 @@ def serialize_model(model):
             data[column.name] = value
     return data
 
+
 def serialize_model_from_dict(data: dict) -> dict:
     from datetime import datetime
+
     return {
-        k: (v.isoformat() if isinstance(v, datetime) else v)
-        for k, v in data.items()
+        k: (v.isoformat() if isinstance(v, datetime) else v) for k, v in data.items()
     }
