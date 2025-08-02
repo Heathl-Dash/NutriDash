@@ -24,8 +24,7 @@ services:
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
     networks:
-      - nutridashboard-rede
-      - nutri_dash
+      - gateway-shared-net
       - rabbit_net
 
   nutriDash_db:
@@ -43,7 +42,7 @@ services:
     volumes:
       - nutri_dash_postgres_data:/var/lib/postgresql/data
     networks:
-      - nutri_dash
+      - gateway-shared-net
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
       interval: 5s
@@ -66,11 +65,8 @@ volumes:
   nutri_dash_postgres_data:
 
 networks:
-  nutri_dash:
-    driver: bridge
-  nutridashboard-rede:
+  gateway-shared-net:
     external: true
-    name: nutridashboard-rede
   rabbit_net:
     external: true
   

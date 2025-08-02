@@ -1,8 +1,9 @@
 # Passo 1:
-Rodar Comandos de configuração de rede externa, para conexão com API gateway Nginx.
+criar rede externa do nginx
+essa rede deve ser criada antes de qualquer um dos serviços, pois os conecta ao nginx
+
 ```bash
-docker swarm init
-docker network create --driver overlay --attachable nutridashboard-rede
+docker network create gateway-shared-net
 ```
 
 # Passo 2
