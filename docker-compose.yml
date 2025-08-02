@@ -24,9 +24,8 @@ services:
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
     networks:
-      - nutridashboard-rede
-      - nutri_dash
-      - rabbit_net
+      - gateway-shared-net
+      - rabbit-MQ-extern-network
 
   nutriDash_db:
     image: postgres:17.5
@@ -43,7 +42,7 @@ services:
     volumes:
       - nutri_dash_postgres_data:/var/lib/postgresql/data
     networks:
-      - nutri_dash
+      - gateway-shared-net
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
       interval: 5s
@@ -60,18 +59,15 @@ services:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
     networks:
-      - rabbit_net
+      - rabbit-MQ-extern-network
 
 volumes:
   nutri_dash_postgres_data:
 
 networks:
-  nutri_dash:
-    driver: bridge
-  nutridashboard-rede:
+  gateway-shared-net:
     external: true
-    name: nutridashboard-rede
-  rabbit_net:
+  rabbit-MQ-extern-network:
     external: true
   
   
