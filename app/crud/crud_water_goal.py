@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.models.waterGoal import WaterGoal, WaterIntake
+from app.models.waterGoal import WaterGoal, WaterIntake, WaterBottle
 from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate, WaterIntakeCreate
 
 
@@ -58,13 +58,24 @@ def update_water_goal(db: Session, user_id: int, water_goal_data: WaterGoalUpdat
 
     if water_goal_data.weight is not None and water_goal_data.weight > 0:
         db_water_goal.ml_goal = round(water_goal_data.weight * 35)
-    else:
-        db_water_goal.ml_goal = db_water_goal.ml_goal
+    
+    ml_drinked_before = db_water_goal.ml_drinked
+    ml_drinked_after = water_goal_data.ml_drinked
 
-    for key, value in water_goal_data.dict(exclude_unset=True).items():
+    ml_intake = ml_drinked_after - ml_drinked_before
+
+    for key, value in water_goal_data.model_dump(exclude_unset=True).items():
         setattr(db_water_goal, key, value)
     db.commit()
     db.refresh(db_water_goal)
+
+    if ml_drinked_before is not None and ml_drinked_after > ml_drinked_before:
+        intake_data = WaterIntakeCreate(
+            water_goal_id=db_water_goal.water_goal_id,
+            ml=ml_intake
+        )
+        create_intake(db, intake_data, user_id)
+
     return db_water_goal
 
 
