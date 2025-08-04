@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: CELERY_BROKER_URL,DB_HOST,DB_NAME,DB_USER,DB_PASSWORD,DB_PORT,RABBITMQ_DEFAULT_USER,RABBITMQ_DEFAULT_PASS,RABBITMQ_DEFAULT_VHOST,DB_PORT,RABBITMQ_QUEUE_NAME,RABBITMQ_EXCHANGE_NAME,RABBITMQ_EXCHANGE_TYPE,RABBITMQ_DEFAULT_HOST,RABBITMQ_DEFAULT_USER,RABBITMQ_DEFAULT_PASS,RABBITMQ_DEFAULT_VHOST,RABBITMQ_DEFAULT_PORT
           script: |
-            cd /home/ubuntu/repos/FitDash
+            cd /home/ubuntu/repos/NutriDash
             git pull origin main
 
             export DB_HOST=${{ secrets.DB_HOST }} \
