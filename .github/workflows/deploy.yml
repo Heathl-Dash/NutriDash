@@ -41,9 +41,8 @@ jobs:
             export RABBITMQ_QUEUE_NAME=${{secrets.RABBITMQ_QUEUE_NAME}} \
             export RABBITMQ_EXCHANGE_NAME=${{secrets.RABBITMQ_EXCHANGE_NAME}} \
             export RABBITMQ_DEFAULT_PORT=${{secrets.RABBITMQ_DEFAULT_PORT}} \
-            export DATABASE_URL="postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}" \
+            export DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}" \
             export RABBITMQ_EXCHANGE_TYPE=${{secrets.RABBITMQ_EXCHANGE_TYPE}} 
 
             docker-compose -f docker-compose.prod.yml up -d --build
-             
              

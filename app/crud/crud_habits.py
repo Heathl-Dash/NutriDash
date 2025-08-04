@@ -28,7 +28,6 @@ def get_habits(
     if negative is True:
         query = query.filter(Habit.negative == True)
 
-    print(query)
 
     return query.order_by(Habit.created.desc()).offset(skip).limit(limit).all()
 
