@@ -31,9 +31,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-DATABASE_URL = os.getenv("DATABASE_URL")
 
-print(DATABASE_URL)
 nutriRouter.include_router(todo.router, prefix="/todo", tags=["ToDo"])
 nutriRouter.include_router(habit.habit_router, prefix="/habit", tags=["Habits"])
 nutriRouter.include_router(

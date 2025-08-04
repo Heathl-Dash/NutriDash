@@ -7,7 +7,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.orm.session import Session
 
 load_dotenv()
-
+print("Iniciando DATABASE>PY")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 print(DATABASE_URL)
