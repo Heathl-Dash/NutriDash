@@ -51,13 +51,13 @@ def start_delete_user_objects():
         print("Mensagem recebida")
         data = json.loads(body)
         user_id = data.get("user_id")
-        events = data.get("events")
+        event = data.get("event")
         if user_id is None:
             print("user_id não informado na mensagem")
             ch.basic_ack(delivery_tag=method.delivery_tag)
             return
 
-        if events == "delete":
+        if event == "delete":
             db: Session = SessionLocal()
             try:
                 db.query(Habit).filter(Habit.user_id == user_id).delete(
@@ -79,7 +79,7 @@ def start_delete_user_objects():
                 print(f"Erro ao deletar objetos: {e}")
             finally:
                 db.close()
-        elif events == "create":
+        elif event == "create":
             db: Session = SessionLocal()
             try:
                 weight = data.get("weight")
@@ -90,7 +90,7 @@ def start_delete_user_objects():
                 print(f"Erro ao criar meta de água: {e}")
             finally:
                 db.close()
-        print(events)
+        print(event)
 
         ch.basic_ack(delivery_tag=method.delivery_tag)
 

@@ -27,15 +27,8 @@ async def lifespan(app: FastAPI):
     scheduler.add_job(run_dump, "interval", hours=24)
     scheduler.start()
 
-    try:
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitMQ-profile-events"))
-        print("✅ Conectado ao RabbitMQ!")
-        connection.close()
-    except Exception as e:
-        print(f"❌ Erro ao conectar: {e}")
-
     consumer_thread = threading.Thread(target=start_delete_user_objects, daemon=True)
-    consumer_thread.start
+    consumer_thread.start()
 
     yield
 
