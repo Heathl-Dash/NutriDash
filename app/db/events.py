@@ -62,7 +62,7 @@ def receive_after_flush(session, flush_context):
                 session=session,
                 action="update",
                 instance=obj,
-                old_data=serialize_model_from_dict(getattr(obj, "_old_state", {})),
+                old_data=serialize_model_from_dict(old_data),
                 new_data=serialize_model(obj),
             )
             # Remover para liberar memória

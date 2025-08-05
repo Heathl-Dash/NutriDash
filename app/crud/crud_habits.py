@@ -23,16 +23,16 @@ def get_habits(
     query = db.query(Habit).filter(Habit.user_id == user_id)
 
     if positive is True:
-        query = query.filter(Habit.positive == True)
+        query = query.filter(Habit.positive.is_(True))
 
     if negative is True:
-        query = query.filter(Habit.negative == True)
+        query = query.filter(Habit.negative.is_(True))
 
     return query.order_by(Habit.created.desc()).offset(skip).limit(limit).all()
 
 
 def create_habit(db: Session, habit: HabitCreate, user_id: int):
-    if habit.negative == False and habit.positive == False:
+    if habit.negative.is_(False) and habit.positive.is_(False):
         raise HTTPException(
             status_code=400,
             detail="O hábito tem que ser marcado como positivo e/ou negativo.",
@@ -67,7 +67,7 @@ def delete_habit(db: Session, habit_id):
 
 def filter_positive_habits(db: Session, user_id: int):
     positive_habits = (
-        db.query(Habit).filter(Habit.positive == True, Habit.user_id == user_id).all()
+        db.query(Habit).filter(Habit.positive.is_(True), Habit.user_id == user_id).all()
     )
 
     return positive_habits
@@ -75,7 +75,7 @@ def filter_positive_habits(db: Session, user_id: int):
 
 def filter_negative_habits(db: Session, user_id: int):
     positive_habits = (
-        db.query(Habit).filter(Habit.negative == True, Habit.user_id == user_id).all()
+        db.query(Habit).filter(Habit.negative.is_(True), Habit.user_id == user_id).all()
     )
 
     return positive_habits
