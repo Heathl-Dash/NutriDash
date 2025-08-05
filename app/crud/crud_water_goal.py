@@ -41,7 +41,7 @@ def create_water_goal(db: Session, user_id: int, water_goal: WaterGoalCreate):
         daily_goal = round(water_goal.weight * 35)
     else:
         daily_goal = 2000
-
+    
     data = water_goal.model_dump(exclude={"ml_goal", "weight"})
 
     db_water_goal = WaterGoal(**data, user_id=user_id, ml_goal=daily_goal)
