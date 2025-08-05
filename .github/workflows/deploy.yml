@@ -26,7 +26,7 @@ jobs:
             echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env.prod
             echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env.prod
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
-            echo "SECRETJWT=${{ secrets.SECRETJWT }}" >> .env.prod
+            echo "SECRET_KEY=${{ secrets.SECRETJWT }}" >> .env.prod
             echo "RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}" >> .env.prod
             echo "RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}" >> .env.prod
             echo "RABBITMQ_DEFAULT_VHOST=${{ secrets.RABBITMQ_DEFAULT_VHOST }}" >> .env.prod
