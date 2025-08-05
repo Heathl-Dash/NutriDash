@@ -1,6 +1,8 @@
 services:
   nutri_web:
     build: .
+    env_file:
+      - .env.prod
     container_name: nutri_web
     command: ./start.sh
     volumes:
