@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.models.waterGoal import WaterBottle, WaterGoal, WaterIntake
+from app.models.waterGoal import WaterGoal, WaterIntake
 from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate, WaterIntakeCreate
 
 

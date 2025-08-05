@@ -1,7 +1,6 @@
 import threading
 from contextlib import asynccontextmanager
 
-import pika
 from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI
 
