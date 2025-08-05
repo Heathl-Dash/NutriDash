@@ -16,34 +16,28 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{secrets.EC2_USER}}
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: CELERY_BROKER_URL,DB_HOST,DB_NAME,DB_USER,DB_PASSWORD,DB_PORT,RABBITMQ_DEFAULT_USER,RABBITMQ_DEFAULT_PASS,RABBITMQ_DEFAULT_VHOST,DB_PORT,RABBITMQ_QUEUE_NAME,RABBITMQ_EXCHANGE_NAME,RABBITMQ_EXCHANGE_TYPE,RABBITMQ_DEFAULT_HOST,RABBITMQ_DEFAULT_USER,RABBITMQ_DEFAULT_PASS,RABBITMQ_DEFAULT_VHOST,RABBITMQ_DEFAULT_PORT
           script: |
             cd /home/ubuntu/repos/NutriDash
             git pull origin main
 
-            export DB_HOST=${{ secrets.DB_HOST }} \
+            echo "DB_HOST=${{ secrets.DB_HOST }}" > .env.prod
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.prod
+            echo "DB_USER=${{ secrets.DB_USER }}" >> .env.prod
+            echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env.prod
+            echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env.prod
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
+            echo "SECRETJWT=${{ secrets.SECRETJWT }}" >> .env.prod
+            echo "RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}" >> .env.prod
+            echo "RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}" >> .env.prod
+            echo "RABBITMQ_DEFAULT_VHOST=${{ secrets.RABBITMQ_DEFAULT_VHOST }}" >> .env.prod
+            echo "RABBITMQ_DEFAULT_HOST=${{ secrets.RABBITMQ_DEFAULT_HOST }}" >> .env.prod
+            echo "RABBITMQ_QUEUE_NAME=${{ secrets.RABBITMQ_QUEUE_NAME }}" >> .env.prod
+            echo "RABBITMQ_EXCHANGE_NAME=${{ secrets.RABBITMQ_EXCHANGE_NAME }}" >> .env.prod
+            echo "RABBITMQ_DEFAULT_PORT=${{ secrets.RABBITMQ_DEFAULT_PORT }}" >> .env.prod
+            # Construindo DATABASE_URL e CELERY_BROKER_URL diretamente com as secrets
+            echo "DATABASE_URL=postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}" >> .env.prod
+            echo "CELERY_BROKER_URL=amqp://${{ secrets.RABBITMQ_DEFAULT_USER }}:${{ secrets.RABBITMQ_DEFAULT_PASS }}@${{ secrets.RABBITMQ_DEFAULT_HOST }}:${{ secrets.RABBITMQ_DEFAULT_PORT }}//" >> .env.prod
+            echo "RABBITMQ_EXCHANGE_TYPE=${{ secrets.RABBITMQ_EXCHANGE_TYPE }}" >> .env.prod
 
-            export DB_NAME=${{ secrets.DB_NAME }} \
-
-            export DB_USER=${{ secrets.DB_USER }} \
-            
-            export DB_PORT=${{ secrets.DB_PORT }} \
-
-            export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
-
-            export DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            
-            export SECRETJWT=${{ secrets.SECRETJWT }} \
-            export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }} \
-            export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }} \
-            export RABBITMQ_DEFAULT_VHOST=${{ secrets.RABBITMQ_DEFAULT_VHOST }} \
-            export RABBITMQ_DEFAULT_HOST=${{ secrets.RABBITMQ_DEFAULT_HOST }} \
-            export RABBITMQ_QUEUE_NAME=${{secrets.RABBITMQ_QUEUE_NAME}} \
-            export RABBITMQ_EXCHANGE_NAME=${{secrets.RABBITMQ_EXCHANGE_NAME}} \
-            export RABBITMQ_DEFAULT_PORT=${{secrets.RABBITMQ_DEFAULT_PORT}} \
-            export DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}" \
-            export CELERY_BROKER_URL="amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@${RABBITMQ_DEFAULT_HOST}:${RABBITMQ_DEFAULT_PORT}//" \
-            export RABBITMQ_EXCHANGE_TYPE=${{secrets.RABBITMQ_EXCHANGE_TYPE}} 
-
-            docker-compose -f docker-compose.prod.yml up -d --build
+            docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
              
