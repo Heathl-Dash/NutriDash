@@ -2,15 +2,15 @@ import json
 import os
 
 import pika
+from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 
+from app.crud.crud_water_goal import create_water_goal
 from app.db.database import SessionLocal
 from app.models.habits import Habit
 from app.models.todo import ToDo
 from app.models.waterGoal import WaterBottle, WaterGoal
-from app.crud.crud_water_goal import create_water_goal
 from app.schemas.waterGoal import WaterGoalCreate
-from dotenv import load_dotenv
 
 load_dotenv()
 

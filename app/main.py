@@ -1,10 +1,10 @@
+import threading
 from contextlib import asynccontextmanager
 
+import pika
 from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI
 
-import pika
-import threading
 from app.api.routers.nutri import nutriRouter
 from app.db.backup import run_dump
 from app.db.database import Base, engine
