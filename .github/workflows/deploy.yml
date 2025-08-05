@@ -32,7 +32,7 @@ jobs:
             export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
 
             export DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            export CELERY_BROKER_URL="amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@${RABBITMQ_HOST}:${RABBITMQ_PORT}//" \
+            
             export SECRETJWT=${{ secrets.SECRETJWT }} \
             export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }} \
             export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }} \
@@ -41,7 +41,9 @@ jobs:
             export RABBITMQ_QUEUE_NAME=${{secrets.RABBITMQ_QUEUE_NAME}} \
             export RABBITMQ_EXCHANGE_NAME=${{secrets.RABBITMQ_EXCHANGE_NAME}} \
             export RABBITMQ_DEFAULT_PORT=${{secrets.RABBITMQ_DEFAULT_PORT}} \
-            export DATABASE_URL="postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}" \
+            export DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}" \
+            export CELERY_BROKER_URL="amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@${RABBITMQ_DEFAULT_HOST}:${RABBITMQ_DEFAULT_PORT}//" \
             export RABBITMQ_EXCHANGE_TYPE=${{secrets.RABBITMQ_EXCHANGE_TYPE}} 
 
             docker-compose -f docker-compose.prod.yml up -d --build
+             

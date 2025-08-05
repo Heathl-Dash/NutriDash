@@ -30,7 +30,7 @@ def receive_before_flush(session, flush_context, instances=None):
             obj, include_collections=False
         ):
             # Copia profunda do estado antigo antes de flush
-            # Podemos pegar dados do banco para 
+            # Podemos pegar dados do banco para
             # garantir que seja o estado antes da modificação
             # Ou pegar do __dict__ (menos seguro se houver alteração prévia)
             old_state = {}
@@ -62,7 +62,7 @@ def receive_after_flush(session, flush_context):
                 session=session,
                 action="update",
                 instance=obj,
-                old_data=serialize_model_from_dict(getattr(obj, "_old_state", {})),
+                old_data=serialize_model_from_dict(old_data),
                 new_data=serialize_model(obj),
             )
             # Remover para liberar memória

@@ -1,10 +1,9 @@
+import threading
 from contextlib import asynccontextmanager
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI
 
-import pika
-import threading
 from app.api.routers.nutri import nutriRouter
 from app.db.backup import run_dump
 from app.db.database import Base, engine
@@ -34,7 +33,8 @@ async def lifespan(app: FastAPI):
 
     scheduler.shutdown()
 
-app = FastAPI(lifespan=lifespan)    
+
+app = FastAPI(lifespan=lifespan)
 
 nutriRouter.include_router(todo.router, prefix="/todo", tags=["ToDo"])
 nutriRouter.include_router(habit.habit_router, prefix="/habit", tags=["Habits"])
