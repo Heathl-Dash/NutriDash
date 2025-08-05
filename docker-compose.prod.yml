@@ -8,8 +8,6 @@ services:
       - ./backups:/app/db/backups
     ports:
       - "8001:8000"
-    depends_on:
-      - rabbitmq
     environment:
       - TZ=America/Sao_Paulo
       - DATABASE_URL=${DATABASE_URL}
@@ -32,18 +30,6 @@ services:
       - RABBITMQ_EXCHANGE_TYPE=${RABBITMQ_EXCHANGE_TYPE}
     networks:
       - gateway-shared-net
-      - rabbit-MQ-extern-network
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"     
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    networks:
       - rabbit-MQ-extern-network
 
 volumes:
