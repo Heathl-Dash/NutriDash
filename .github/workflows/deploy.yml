@@ -34,8 +34,7 @@ jobs:
             echo "RABBITMQ_QUEUE_NAME=${{ secrets.RABBITMQ_QUEUE_NAME }}" >> .env.prod
             echo "RABBITMQ_EXCHANGE_NAME=${{ secrets.RABBITMQ_EXCHANGE_NAME }}" >> .env.prod
             echo "RABBITMQ_DEFAULT_PORT=${{ secrets.RABBITMQ_DEFAULT_PORT }}" >> .env.prod
-            # Construindo DATABASE_URL e CELERY_BROKER_URL diretamente com as secrets
-            echo "DATABASE_URL=postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}" >> .env.prod
+            echo "DATABASE_URL=postgresql://${{secrets.DB_USER}}:${{secrets.DB_PASSWORD}}@${{secrets.DB_HOST}}:${{secrets.DB_PORT}}/${{secrets.DB_NAME}}" >> .env.prod
             echo "CELERY_BROKER_URL=amqp://${{ secrets.RABBITMQ_DEFAULT_USER }}:${{ secrets.RABBITMQ_DEFAULT_PASS }}@${{ secrets.RABBITMQ_DEFAULT_HOST }}:${{ secrets.RABBITMQ_DEFAULT_PORT }}//" >> .env.prod
             echo "RABBITMQ_EXCHANGE_TYPE=${{ secrets.RABBITMQ_EXCHANGE_TYPE }}" >> .env.prod
 
