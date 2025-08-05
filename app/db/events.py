@@ -30,7 +30,7 @@ def receive_before_flush(session, flush_context, instances=None):
             obj, include_collections=False
         ):
             # Copia profunda do estado antigo antes de flush
-            # Podemos pegar dados do banco para 
+            # Podemos pegar dados do banco para
             # garantir que seja o estado antes da modificação
             # Ou pegar do __dict__ (menos seguro se houver alteração prévia)
             old_state = {}

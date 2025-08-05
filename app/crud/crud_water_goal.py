@@ -41,7 +41,7 @@ def create_water_goal(db: Session, user_id: int, water_goal: WaterGoalCreate):
         daily_goal = round(water_goal.weight * 35)
     else:
         daily_goal = 2000
-    
+
     data = water_goal.model_dump(exclude={"ml_goal", "weight"})
 
     db_water_goal = WaterGoal(**data, user_id=user_id, ml_goal=daily_goal)
@@ -58,7 +58,7 @@ def update_water_goal(db: Session, user_id: int, water_goal_data: WaterGoalUpdat
 
     if water_goal_data.weight is not None and water_goal_data.weight > 0:
         db_water_goal.ml_goal = round(water_goal_data.weight * 35)
-    
+
     ml_drinked_before = db_water_goal.ml_drinked
     ml_drinked_after = water_goal_data.ml_drinked
 
@@ -71,8 +71,7 @@ def update_water_goal(db: Session, user_id: int, water_goal_data: WaterGoalUpdat
 
     if ml_drinked_before is not None and ml_drinked_after > ml_drinked_before:
         intake_data = WaterIntakeCreate(
-            water_goal_id=db_water_goal.water_goal_id,
-            ml=ml_intake
+            water_goal_id=db_water_goal.water_goal_id, ml=ml_intake
         )
         create_intake(db, intake_data, user_id)
 

@@ -15,13 +15,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 RABBITMQ_DEFAULT_HOST = os.getenv("RABBITMQ_DEFAULT_HOST")
-RABBITMQ_DEFAULT_PORT= os.getenv("RABBITMQ_DEFAULT_PORT")
+RABBITMQ_DEFAULT_PORT = os.getenv("RABBITMQ_DEFAULT_PORT")
 RABBITMQ_DEFAULT_USER = os.getenv("RABBITMQ_DEFAULT_USER")
 RABBITMQ_DEFAULT_PASS = os.getenv("RABBITMQ_DEFAULT_PASS")
 RABBITMQ_DEFAULT_VHOST = os.getenv("RABBITMQ_DEFAULT_VHOST")
 RABBITMQ_QUEUE_NAME = os.getenv("RABBITMQ_QUEUE_NAME")
 RABBITMQ_EXCHANGE_NAME = os.getenv("RABBITMQ_EXCHANGE_NAME")
 RABBITMQ_EXCHANGE_TYPE = os.getenv("RABBITMQ_EXCHANGE_TYPE")
+
 
 def __get_connection_and_channel():
     print(RABBITMQ_DEFAULT_USER)
@@ -84,7 +85,7 @@ def start_delete_user_objects():
             try:
                 weight = data.get("weight")
                 water_goal_data = WaterGoalCreate(weight=weight, ml_drinked=0)
-                create_water_goal(db=db, user_id = user_id, water_goal= water_goal_data)
+                create_water_goal(db=db, user_id=user_id, water_goal=water_goal_data)
             except Exception as e:
                 db.rollback()
                 print(f"Erro ao criar meta de água: {e}")

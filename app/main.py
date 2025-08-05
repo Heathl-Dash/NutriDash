@@ -34,7 +34,8 @@ async def lifespan(app: FastAPI):
 
     scheduler.shutdown()
 
-app = FastAPI(lifespan=lifespan)    
+
+app = FastAPI(lifespan=lifespan)
 
 nutriRouter.include_router(todo.router, prefix="/todo", tags=["ToDo"])
 nutriRouter.include_router(habit.habit_router, prefix="/habit", tags=["Habits"])
