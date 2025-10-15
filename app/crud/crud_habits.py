@@ -32,7 +32,7 @@ def get_habits(
 
 
 def create_habit(db: Session, habit: HabitCreate, user_id: int):
-    if habit.negative.is_(False) and habit.positive.is_(False):
+    if habit.negative is False and habit.positive is False:
         raise HTTPException(
             status_code=400,
             detail="O hábito tem que ser marcado como positivo e/ou negativo.",
