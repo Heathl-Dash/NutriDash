@@ -5,7 +5,6 @@ from app.schemas.todo import ToDoCreate, ToDoUpdate
 from app.models.todo import ToDo
 from datetime import datetime, timedelta
 
-
 def test_create_todo():
   mock_db = MagicMock()
   todo_data = ToDoCreate(title="ir na nutricionista na sexta")
@@ -18,6 +17,29 @@ def test_create_todo():
   assert result.user_id == 1
   assert result.title == "ir na nutricionista na sexta"
 
+def test_get_todos_returns_sorted_results():
+    mock_db = MagicMock()
+    mock_query = MagicMock()
+    mock_db.query.return_value = mock_query
+    mock_query.filter.return_value = mock_query
+    mock_query.order_by.return_value = mock_query
+    mock_query.offset.return_value = mock_query
+    mock_query.limit.return_value = mock_query
+
+    now = datetime.now()
+    fake_todos = [
+        ToDo(id=1, title="Antigo a fazer", done=False, created=now - timedelta(days=3), user_id=1),
+        ToDo(id=2, title="Recente feito", done=True, created=now, user_id=1),
+        ToDo(id=3, title="Recente a fazer", done=False, created=now - timedelta(hours=1), user_id=1),
+    ]
+    mock_query.all.return_value = fake_todos
+
+    result = crud_todo.get_todos(mock_db, user_id=1)
+
+    mock_db.query.assert_called_once_with(ToDo)
+    mock_query.filter.assert_called_once()
+    mock_query.order_by.assert_called_once()
+    assert result == fake_todos
 
 def test_update_todo():
   mock_db = MagicMock()
