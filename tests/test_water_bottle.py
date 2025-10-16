@@ -72,6 +72,37 @@ def test_create_water_bottle_no_goal(mock_get_goal):
   assert exc.value.status_code == 400
 
 
+def test_update_water_bottle_found():
+  mock_db = MagicMock()
+  fake_bottle = WaterBottle(
+      water_bottle_id=1,
+      bottle_name="Antiga",
+      ml_bottle=400,
+      user_id=1,
+      id_bottle_style=1,
+  )
+  with patch("app.crud.crud_water_bottle.get_water_bottle", return_value=fake_bottle):
+    update_data = WaterBottleUpdate(bottle_name="Nova", ml_bottle=600, id_bottle_style=2)
+
+    result = crud_water_bottle.update_water_bottle(mock_db, 1, update_data)
+
+    mock_db.commit.assert_called_once()
+    mock_db.refresh.assert_called_once_with(fake_bottle)
+    assert result.bottle_name == "Nova"
+    assert result.ml_bottle == 600
+    assert result.id_bottle_style == 2
+
+
+def test_update_water_bottle_not_found():
+  mock_db = MagicMock()
+  with patch("app.crud.crud_water_bottle.get_water_bottle", return_value=None):
+    update_data = WaterBottleUpdate(bottle_name="Nova", ml_bottle=600, id_bottle_style=2)
+    result = crud_water_bottle.update_water_bottle(mock_db, 99, update_data)
+
+    mock_db.commit.assert_not_called()
+    assert result is None
+
+
 
 
 
