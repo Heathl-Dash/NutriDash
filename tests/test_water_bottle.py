@@ -103,7 +103,27 @@ def test_update_water_bottle_not_found():
     assert result is None
 
 
+def test_delete_water_bottle_found():
+  mock_db = MagicMock()
+  fake_bottle = WaterBottle(water_bottle_id=1, bottle_name="Azul", ml_bottle=500, user_id=1)
 
+  with patch("app.crud.crud_water_bottle.get_water_bottle", return_value=fake_bottle):
+    result = crud_water_bottle.delete_water_bottle(mock_db, 1)
+
+    mock_db.delete.assert_called_once_with(fake_bottle)
+    mock_db.commit.assert_called_once()
+    assert result == fake_bottle
+
+
+def test_delete_water_bottle_not_found():
+  mock_db = MagicMock()
+
+  with patch("app.crud.crud_water_bottle.get_water_bottle", return_value=None):
+    result = crud_water_bottle.delete_water_bottle(mock_db, 1)
+
+    mock_db.delete.assert_not_called()
+    mock_db.commit.assert_not_called()
+    assert result is None
 
 
    
