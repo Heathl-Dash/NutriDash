@@ -25,6 +25,7 @@ services:
     networks:
       - gateway-shared-net
       - rabbit-MQ-extern-network
+      - app-network
 
   nutriDash_db:
     image: postgres:17.5
@@ -56,5 +57,9 @@ networks:
     external: true
   rabbit-MQ-extern-network:
     external: true
+  app-network:
+    external: true
+    name: app-network
+
   
   

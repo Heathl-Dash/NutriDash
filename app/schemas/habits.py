@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -18,7 +19,7 @@ class HabitCreate(HabitBase):
 class HabitRead(HabitBase):
     positive_count: int
     negative_count: int
-    user_id: int
+    keycloak_id: UUID
     id: int
     created: datetime
 

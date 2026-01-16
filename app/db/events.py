@@ -4,7 +4,6 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import event
 from sqlalchemy.orm import Session
 
-from app.models.waterGoal import WaterGoal
 from app.models.waterGoalLog import WaterGoalLog
 from app.utils.serializers import serialize_model, serialize_model_from_dict
 
@@ -25,6 +24,8 @@ def log_water_goal_change(session, action, instance, old_data=None, new_data=Non
 @event.listens_for(Session, "before_flush")
 def receive_before_flush(session, flush_context, instances=None):
     # Guardar estado antigo para objetos alterados
+    from app.models.waterGoal import WaterGoal
+
     for obj in session.dirty:
         if isinstance(obj, WaterGoal) and session.is_modified(
             obj, include_collections=False
@@ -43,6 +44,8 @@ def receive_before_flush(session, flush_context, instances=None):
 @event.listens_for(Session, "after_flush")
 def receive_after_flush(session, flush_context):
     # Criar logs após flush com id já definido
+    from app.models.waterGoal import WaterGoal
+    
     for obj in session.new:
         if isinstance(obj, WaterGoal):
             log_water_goal_change(

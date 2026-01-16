@@ -8,7 +8,7 @@ from fastapi import HTTPException
 def test_create_habit():
   mock_db = MagicMock()
   habit_data = HabitCreate(title="Comer fruta", positive=True, negative = False)
-  result = crud_habits.create_habit(mock_db, habit_data, user_id=1)
+  result = crud_habits.create_habit(mock_db, habit_data, keycloak_id=1)
 
   mock_db.add.assert_called_once()
   mock_db.commit.assert_called_once()
@@ -24,7 +24,7 @@ def test_create_habit_cannot_be_both_non_positive_and_non_negative():
   invalid_habit = HabitCreate(title="Dormir cedo", description="", positive=False, negative=False)
 
   with pytest.raises(HTTPException) as exc:
-    crud_habits.create_habit(mock_db, invalid_habit, user_id=1)
+    crud_habits.create_habit(mock_db, invalid_habit, keycloak_id=1)
 
   assert exc.value.status_code == 400
   

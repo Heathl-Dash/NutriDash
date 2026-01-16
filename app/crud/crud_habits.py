@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 from app.models.habits import Habit
 from app.schemas.habits import HabitCreate, HabitUpdate
 
+import uuid
+
 
 def get_habit(db: Session, habit_id: int):
     return db.query(Habit).filter(Habit.id == habit_id).first()
@@ -13,14 +15,14 @@ def get_habit(db: Session, habit_id: int):
 
 def get_habits(
     db: Session,
-    user_id: int,
+    keycloak_id: uuid.UUID,
     skip: int = 0,
     limit: int = 100,
     positive: Optional[bool] = None,
     negative: Optional[bool] = None,
 ):
 
-    query = db.query(Habit).filter(Habit.user_id == user_id)
+    query = db.query(Habit).filter(Habit.keycloak_id == keycloak_id)
 
     if positive is True:
         query = query.filter(Habit.positive.is_(True))
@@ -31,14 +33,14 @@ def get_habits(
     return query.order_by(Habit.created.desc()).offset(skip).limit(limit).all()
 
 
-def create_habit(db: Session, habit: HabitCreate, user_id: int):
+def create_habit(db: Session, habit: HabitCreate, keycloak_id: uuid.UUID):
     if habit.negative is False and habit.positive is False:
         raise HTTPException(
             status_code=400,
             detail="O hábito tem que ser marcado como positivo e/ou negativo.",
         )
 
-    db_habit = Habit(**habit.model_dump(), user_id=user_id)
+    db_habit = Habit(**habit.model_dump(), keycloak_id=keycloak_id)
     db.add(db_habit)
     db.commit()
     db.refresh(db_habit)
@@ -65,17 +67,17 @@ def delete_habit(db: Session, habit_id):
     return db_habit
 
 
-def filter_positive_habits(db: Session, user_id: int):
+def filter_positive_habits(db: Session, keycloak_id: uuid.UUID):
     positive_habits = (
-        db.query(Habit).filter(Habit.positive.is_(True), Habit.user_id == user_id).all()
+        db.query(Habit).filter(Habit.positive.is_(True), Habit.keycloak_id == keycloak_id).all()
     )
 
     return positive_habits
 
 
-def filter_negative_habits(db: Session, user_id: int):
+def filter_negative_habits(db: Session, keycloak_id: uuid.UUID):
     positive_habits = (
-        db.query(Habit).filter(Habit.negative.is_(True), Habit.user_id == user_id).all()
+        db.query(Habit).filter(Habit.negative.is_(True), Habit.keycloak_id == keycloak_id).all()
     )
 
     return positive_habits
