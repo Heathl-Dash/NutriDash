@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.crud import crud_todo
 from app.db.database import get_db
-from app.dependencies.user import get_user_id
+from app.dependencies.user import get_keycloak_id
 from app.schemas.todo import (
     ToDoCreate,
     TodoHistoryRead,
@@ -20,18 +20,18 @@ router = APIRouter()
 
 @router.get("/", response_model=List[ToDoRead])
 def read_todos(
-    user_id: int = Depends(get_user_id),
+    user_id: int = Depends(get_keycloak_id),
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
 ):
 
-    return crud_todo.get_todos(db, user_id=user_id, skip=skip, limit=limit)
+    return crud_todo.get_todos(db, keycloak_id=user_id, skip=skip, limit=limit)
 
 
 @router.get("/history", response_model=List[TodoHistoryRead])
 def get_todo_history(
-    user_id: int = Depends(get_user_id), db: Session = Depends(get_db)
+    user_id: int = Depends(get_keycloak_id), db: Session = Depends(get_db)
 ):
 
     history = crud_todo.list_by_user(db, user_id)
@@ -40,7 +40,7 @@ def get_todo_history(
 
 @router.get("/{todo_id}", response_model=ToDoRead)
 def read_todo(
-    todo_id: int, user_id=Depends(get_user_id), db: Session = Depends(get_db)
+    todo_id: int, user_id=Depends(get_keycloak_id), db: Session = Depends(get_db)
 ):
 
     todo = get_todo_or_err(db, todo_id, user_id)
@@ -49,7 +49,7 @@ def read_todo(
 
 @router.post("/", response_model=ToDoRead, status_code=201)
 def create_todo(
-    todo: ToDoCreate, user_id: int = Depends(get_user_id), db: Session = Depends(get_db)
+    todo: ToDoCreate, user_id: int = Depends(get_keycloak_id), db: Session = Depends(get_db)
 ):
 
     try:
@@ -64,7 +64,7 @@ def create_todo(
 def update_todo(
     todo_id: int,
     todo_data: ToDoUpdate,
-    user_id: int = Depends(get_user_id),
+    user_id: int = Depends(get_keycloak_id),
     db: Session = Depends(get_db),
 ):
 
@@ -75,7 +75,7 @@ def update_todo(
 
 @router.delete("/{todo_id}", status_code=204)
 def delete_todo(
-    todo_id: int, user_id: int = Depends(get_user_id), db: Session = Depends(get_db)
+    todo_id: int, user_id: int = Depends(get_keycloak_id), db: Session = Depends(get_db)
 ):
     get_todo_or_err(db, todo_id, user_id)
     crud_todo.delete_todo(db, todo_id)
@@ -83,7 +83,7 @@ def delete_todo(
 
 @router.patch("/{todo_id}/done-toggle", response_model=ToDoRead)
 def toggle_mark(
-    todo_id: int, db: Session = Depends(get_db), user_id: int = Depends(get_user_id)
+    todo_id: int, db: Session = Depends(get_db), user_id: int = Depends(get_keycloak_id)
 ):
     todo = get_todo_or_err(db, todo_id, user_id)
     existing = crud_todo.get_today_entry(db, todo_id)

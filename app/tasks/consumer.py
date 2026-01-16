@@ -61,7 +61,7 @@ def start_delete_user_objects():
         if event == "delete":
             db: Session = SessionLocal()
             try:
-                db.query(Habit).filter(Habit.user_id == user_id).delete(
+                db.query(Habit).filter(Habit.keycloak_id == user_id).delete(
                     synchronize_session=False
                 )
                 db.query(ToDo).filter(ToDo.user_id == user_id).delete(

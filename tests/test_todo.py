@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 def test_create_todo():
   mock_db = MagicMock()
   todo_data = ToDoCreate(title="ir na nutricionista na sexta")
-  result = crud_todo.create_todo(mock_db, todo_data, user_id=1)
+  result = crud_todo.create_todo(mock_db, todo_data, keycloak_id=1)
 
   mock_db.add.assert_called_once()
   mock_db.commit.assert_called_once()
@@ -34,7 +34,7 @@ def test_get_todos_returns_sorted_results():
     ]
     mock_query.all.return_value = fake_todos
 
-    result = crud_todo.get_todos(mock_db, user_id=1)
+    result = crud_todo.get_todos(mock_db, keycloak_id=1)
 
     mock_db.query.assert_called_once_with(ToDo)
     mock_query.filter.assert_called_once()

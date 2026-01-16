@@ -6,11 +6,16 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.models.waterGoal import WaterGoal, WaterIntake
-from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate, WaterIntakeCreate
+from app.schemas.waterGoal import (
+    WaterGoalCreate, 
+    WaterGoalUpdate, 
+    WaterIntakeCreate
+)
 
+import uuid
 
-def get_water_goal(db: Session, user_id: int):
-    water_goal = db.query(WaterGoal).filter(WaterGoal.user_id == user_id).first()
+def get_water_goal(db: Session, keycloak_id: uuid.UUID):
+    water_goal = db.query(WaterGoal).filter(WaterGoal.keycloak_id == keycloak_id).first()
     if not water_goal:
         return None
 
@@ -25,13 +30,8 @@ def get_water_goal(db: Session, user_id: int):
 
     return water_goal
 
-
-def get_water_goal_by_user(db: Session, user_id: int):
-    return db.query(WaterGoal).filter(WaterGoal.user_id == user_id).first()
-
-
-def create_water_goal(db: Session, user_id: int, water_goal: WaterGoalCreate):
-    has_water_goal = get_water_goal_by_user(db, user_id)
+def create_water_goal(db: Session, keycloak_id: uuid.UUID, water_goal: WaterGoalCreate):
+    has_water_goal = db.query(WaterGoal).filter(WaterGoal.keycloak_id == keycloak_id).first()
     if has_water_goal:
         raise HTTPException(
             status_code=400, detail="Water goal already exists for this user"
@@ -44,15 +44,15 @@ def create_water_goal(db: Session, user_id: int, water_goal: WaterGoalCreate):
 
     data = water_goal.model_dump(exclude={"ml_goal", "weight"})
 
-    db_water_goal = WaterGoal(**data, user_id=user_id, ml_goal=daily_goal)
+    db_water_goal = WaterGoal(**data, keycloak_id=keycloak_id, ml_goal=daily_goal)
     db.add(db_water_goal)
     db.commit()
     db.refresh(db_water_goal)
     return db_water_goal
 
 
-def update_water_goal(db: Session, user_id: int, water_goal_data: WaterGoalUpdate):
-    db_water_goal = get_water_goal(db, user_id)
+def update_water_goal(db: Session, keycloak_id: uuid.UUID, water_goal_data: WaterGoalUpdate):
+    db_water_goal = get_water_goal(db, keycloak_id)
     if not db_water_goal:
         return None
 
@@ -73,13 +73,13 @@ def update_water_goal(db: Session, user_id: int, water_goal_data: WaterGoalUpdat
         intake_data = WaterIntakeCreate(
             water_goal_id=db_water_goal.water_goal_id, ml=ml_intake
         )
-        create_intake(db, intake_data, user_id)
+        create_intake(db, intake_data, keycloak_id)
 
     return db_water_goal
 
 
-def delete_water_goal(db: Session, user_id):
-    db_water_goal = get_water_goal(db, user_id)
+def delete_water_goal(db: Session, keycloak_id: uuid.UUID):
+    db_water_goal = get_water_goal(db, keycloak_id)
     if not db_water_goal:
         return None
     db.delete(db_water_goal)
@@ -87,8 +87,8 @@ def delete_water_goal(db: Session, user_id):
     return db_water_goal
 
 
-def create_intake(db: Session, intake_data: WaterIntakeCreate, user_id: int):
-    intake = WaterIntake(**intake_data.model_dump(), user_id=user_id)
+def create_intake(db: Session, intake_data: WaterIntakeCreate, keycloak_id: uuid.UUID):
+    intake = WaterIntake(**intake_data.model_dump(), keycloak_id=keycloak_id)
     db.add(intake)
     db.commit()
     db.refresh(intake)
@@ -108,12 +108,12 @@ def get_week_range(reference: datetime = None):
     return start, end
 
 
-def get_intakes_sum_week(db: Session, user_id: int, reference: date = None):
+def get_intakes_sum_week(db: Session, keycloak_id: uuid.UUID, reference: date = None):
     start, end = get_week_range(reference)
     results = (
         db.query(WaterIntake)
         .filter(
-            WaterIntake.user_id == user_id,
+            WaterIntake.keycloak_id == keycloak_id,
             WaterIntake.timestamp >= start,
             WaterIntake.timestamp <= end,
         )
@@ -130,8 +130,8 @@ def get_intakes_sum_week(db: Session, user_id: int, reference: date = None):
     return week_data
 
 
-def get_intakes_by_user(db: Session, user_id: int):
-    return db.query(WaterIntake).filter(WaterIntake.user_id == user_id).all()
+def get_intakes_by_user(db: Session, keycloak_id: uuid.UUID):
+    return db.query(WaterIntake).filter(WaterIntake.keycloak_id == keycloak_id).all()
 
 
 def get_intakes_by_goal(db: Session, goal_id: int):
