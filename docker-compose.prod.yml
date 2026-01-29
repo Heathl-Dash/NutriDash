@@ -3,20 +3,49 @@ services:
     build: .
     container_name: nutri_web
     command: ./start.sh
-    env_file:
-      - .env.prod
     volumes:
       - .:/app
       - ./backups:/app/db/backups
     ports:
       - "8001:8000"
+    depends_on:
+      - nutriDash_db
+    env_file:
+      - .env
     environment:
       - TZ=America/Sao_Paulo
+      - DATABASE_URL=${DATABASE_URL}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - PYTHONPATH=/app
-      - ALGORITHM=HS256
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
     networks:
       - gateway-shared-net
       - rabbit-MQ-extern-network
+      - app-network
+
+  nutriDash_db:
+    image: postgres:17.5
+    container_name: nutriDash_db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      TZ: America/Sao_Paulo
+    volumes:
+      - nutri_dash_postgres_data:/var/lib/postgresql/data
+    networks:
+      - gateway-shared-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   nutri_dash_postgres_data:
@@ -26,5 +55,9 @@ networks:
     external: true
   rabbit-MQ-extern-network:
     external: true
+  app-network:
+    external: true
+    name: app-network
+
   
   
