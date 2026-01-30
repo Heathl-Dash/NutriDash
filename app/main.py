@@ -19,6 +19,8 @@ from .api.routers import (
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+    
     scheduler = BackgroundScheduler()
     scheduler.add_job(run_dump, "interval", hours=24)
     scheduler.start()
@@ -30,8 +32,7 @@ async def lifespan(app: FastAPI):
 
     scheduler.shutdown()
 
-Base.metadata.create_all(bind=engine)
-
+    
 app = FastAPI(lifespan=lifespan)
 
 nutriRouter.include_router(todo.router, prefix="/todo", tags=["ToDo"])
