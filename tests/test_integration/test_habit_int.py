@@ -1,37 +1,8 @@
-import pytest
 from uuid import uuid4
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 from app.main import app
 from app.dependencies.user import get_keycloak_id
-from app.db.database import Base, get_db
 from app.schemas.habits import HabitCreate, HabitUpdate
-
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-@pytest.fixture(scope="function")
-def db_session():
-    Base.metadata.create_all(bind=engine)
-    db = TestingSessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-        Base.metadata.drop_all(bind=engine)
-
-@pytest.fixture(scope="function", autouse=True)
-def setup_mocks(db_session):
-    app.dependency_overrides[get_db] = lambda: db_session
-    yield
-    app.dependency_overrides.clear()
-
-@pytest.fixture
-def client():
-    return TestClient(app)
 
 user1 = uuid4()
 prefix = "/api/v1/nutri/"

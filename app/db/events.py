@@ -14,7 +14,7 @@ def log_water_goal_change(session, action, instance, old_data=None, new_data=Non
     log = WaterGoalLog(
         action=action,
         water_goal_id=instance.water_goal_id,
-        user_id=instance.user_id,
+        keycloak_id=instance.keycloak_id,
         old_data=jsonable_encoder(old_data) if old_data else None,
         new_data=jsonable_encoder(new_data) if new_data else None,
     )
