@@ -23,8 +23,8 @@ async def lifespan(app: FastAPI):
     scheduler.add_job(run_dump, "interval", hours=24)
     scheduler.start()
 
-    # consumer_thread = threading.Thread(target=start_delete_user_objects, daemon=True)
-    # consumer_thread.start()
+    consumer_thread = threading.Thread(target=start_delete_user_objects, daemon=True)
+    consumer_thread.start()
 
     yield
 
