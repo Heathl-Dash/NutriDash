@@ -51,6 +51,16 @@ def update_habit(db: Session, habit_id: int, habit_data: HabitUpdate):
     db_habit = get_habit(db, habit_id)
     if not db_habit:
         return None
+        
+    new_positive = habit_data.positive if habit_data.positive is not None else db_habit.positive
+    new_negative = habit_data.negative if habit_data.negative is not None else db_habit.negative
+    
+    if not new_positive and not new_negative:
+        raise HTTPException(
+            status_code=400, 
+            detail="Habit must be either positive, negative, or both"
+        )            
+        
     for key, value in habit_data.model_dump(exclude_unset=True).items():
         setattr(db_habit, key, value)
     db.commit()

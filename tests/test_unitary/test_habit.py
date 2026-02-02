@@ -1,20 +1,22 @@
+from uuid import uuid4
 import pytest
 from unittest.mock import MagicMock
 from app.crud import crud_habits
 from app.schemas.habits import HabitCreate, HabitUpdate
 from fastapi import HTTPException
 
+user1 = uuid4()
 
 def test_create_habit():
   mock_db = MagicMock()
-  habit_data = HabitCreate(title="Comer fruta", positive=True, negative = False)
-  result = crud_habits.create_habit(mock_db, habit_data, keycloak_id=1)
+  habit_data = HabitCreate(title="Comer fruta", description="", positive=True, negative = False)
+  result = crud_habits.create_habit(mock_db, habit_data, keycloak_id=user1)
 
   mock_db.add.assert_called_once()
   mock_db.commit.assert_called_once()
   mock_db.refresh.assert_called_once()
 
-  assert result.user_id == 1
+  assert result.keycloak_id == user1
   assert result.title == "Comer fruta"
   assert result.positive == True
   assert result.negative == False
@@ -24,7 +26,7 @@ def test_create_habit_cannot_be_both_non_positive_and_non_negative():
   invalid_habit = HabitCreate(title="Dormir cedo", description="", positive=False, negative=False)
 
   with pytest.raises(HTTPException) as exc:
-    crud_habits.create_habit(mock_db, invalid_habit, keycloak_id=1)
+    crud_habits.create_habit(mock_db, invalid_habit, keycloak_id=user1)
 
   assert exc.value.status_code == 400
   
@@ -48,12 +50,13 @@ def test_update_habit():
 def test_update_habit_cannot_be_both_non_positive_and_non_negative():
   mock_db = MagicMock()
   habit_data = HabitCreate(title="Comer fruta", description="", positive=True, negative = False)
+  
   mock_db.query().filter().first.return_value = habit_data
 
   invalid_update = HabitUpdate(positive=False, negative=False)
 
   with pytest.raises(HTTPException) as exc:
-    crud_habits.update_habit(mock_db, 1, habit_data=invalid_update)
+    crud_habits.update_habit(mock_db, 1, invalid_update)
 
   assert exc.value.status_code == 400
 

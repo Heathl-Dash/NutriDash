@@ -33,7 +33,6 @@ class WaterBottleCreate(WaterBottleBase):
 class WaterBottleRead(WaterBottleBase):
     water_bottle_id: int
     keycloak_id: UUID
-    id_bottle_style: int
 
     class Config:
         orm_mode = True

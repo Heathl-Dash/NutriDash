@@ -4,13 +4,16 @@ from app.crud import crud_water_bottle
 from app.schemas.waterGoal import WaterBottleCreate, WaterBottleUpdate
 from app.models.waterGoal import WaterBottle
 from fastapi import HTTPException
+from uuid import uuid4
+
+user1 = uuid4()
 
 def test_get_water_bottle():
   mock_db = MagicMock()
   mock_query = MagicMock()
   mock_db.query.return_value = mock_query
   mock_query.filter.return_value = mock_query
-  fake_bottle = WaterBottle(water_bottle_id=1, bottle_name="Garrafa Azul", ml_bottle=500, user_id=1)
+  fake_bottle = WaterBottle(water_bottle_id=1, bottle_name="Garrafa Azul", ml_bottle=500, keycloak_id=user1)
   mock_query.first.return_value = fake_bottle
 
   result = crud_water_bottle.get_water_bottle(mock_db, 1)
@@ -26,8 +29,8 @@ def test_get_water_bottle_user():
   mock_db.query.return_value = mock_query
   mock_query.filter.return_value = mock_query
   fake_bottles = [
-      WaterBottle(water_bottle_id=1, bottle_name="Azul", ml_bottle=500, user_id=1),
-      WaterBottle(water_bottle_id=2, bottle_name="Vermelha", ml_bottle=700, user_id=1),
+      WaterBottle(water_bottle_id=1, bottle_name="Azul", ml_bottle=500, keycloak_id=user1),
+      WaterBottle(water_bottle_id=2, bottle_name="Vermelha", ml_bottle=700, keycloak_id=user1),
   ]
   mock_query.all.return_value = fake_bottles
 
@@ -38,36 +41,36 @@ def test_get_water_bottle_user():
   assert result == fake_bottles
 
 
-@patch("app.crud.crud_water_bottle.get_water_goal_by_user")
-def test_create_water_bottle_success(mock_get_goal):
+def test_create_water_bottle_success():
   mock_db = MagicMock()
   mock_goal = MagicMock()
   mock_goal.water_goal_id = 10
-  mock_get_goal.return_value = mock_goal
-
+  
+  mock_db.query.return_value.filter.return_value.first.return_value = mock_goal
+  
   bottle_data = WaterBottleCreate(bottle_name="Garrafa Azul", ml_bottle=500, id_bottle_style=2)
 
-  result = crud_water_bottle.create_water_bottle(mock_db, bottle_data, user_id=1)
+  result = crud_water_bottle.create_water_bottle(mock_db, bottle_data, keycloak_id=user1)
 
-  mock_get_goal.assert_called_once_with(mock_db, 1)
-  mock_db.add.assert_called_once()
-  mock_db.commit.assert_called_once()
-  mock_db.refresh.assert_called_once()
-
-  assert result.user_id == 1
+  assert result.keycloak_id == user1
   assert result.water_goal_id == 10
   assert result.bottle_name == "Garrafa Azul"
   assert result.ml_bottle == 500
   assert result.id_bottle_style == 2
+  
+  mock_db.add.assert_called_once()
+  mock_db.commit.assert_called_once()
+  mock_db.refresh.assert_called_once()
 
-@patch("app.crud.crud_water_bottle.get_water_goal_by_user")
-def test_create_water_bottle_no_goal(mock_get_goal):
+def test_create_water_bottle_no_goal():
   mock_db = MagicMock()  
-  mock_get_goal.return_value = None
+  
+  mock_db.query().filter().first.return_value = None
+  
   bottle_data = WaterBottleCreate(bottle_name="Garrafa Azul", ml_bottle=500, id_bottle_style=2)
 
   with pytest.raises(HTTPException) as exc:
-    crud_water_bottle.create_water_bottle(mock_db, bottle_data, user_id=1)
+    crud_water_bottle.create_water_bottle(mock_db, bottle_data, keycloak_id=user1)
 
   assert exc.value.status_code == 400
 
@@ -78,7 +81,7 @@ def test_update_water_bottle_found():
       water_bottle_id=1,
       bottle_name="Antiga",
       ml_bottle=400,
-      user_id=1,
+      keycloak_id=user1,
       id_bottle_style=1,
   )
   with patch("app.crud.crud_water_bottle.get_water_bottle", return_value=fake_bottle):
@@ -105,7 +108,7 @@ def test_update_water_bottle_not_found():
 
 def test_delete_water_bottle_found():
   mock_db = MagicMock()
-  fake_bottle = WaterBottle(water_bottle_id=1, bottle_name="Azul", ml_bottle=500, user_id=1)
+  fake_bottle = WaterBottle(water_bottle_id=1, bottle_name="Azul", ml_bottle=500, keycloak_id=user1)
 
   with patch("app.crud.crud_water_bottle.get_water_bottle", return_value=fake_bottle):
     result = crud_water_bottle.delete_water_bottle(mock_db, 1)
