@@ -1,10 +1,11 @@
+import uuid
+
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.models.waterGoal import WaterBottle, WaterGoal
 from app.schemas.waterGoal import WaterBottleCreate, WaterBottleUpdate
 
-import uuid 
 
 def get_water_bottle(db: Session, water_bottle_id: int):
     return (
@@ -18,7 +19,9 @@ def get_water_bottle_user(db: Session, keycloak_id: uuid.UUID):
     return db.query(WaterBottle).filter(WaterBottle.keycloak_id == keycloak_id).all()
 
 
-def create_water_bottle(db: Session, water_bottle: WaterBottleCreate, keycloak_id: uuid.UUID):
+def create_water_bottle(
+    db: Session, water_bottle: WaterBottleCreate, keycloak_id: uuid.UUID
+):
     user_goal = db.query(WaterGoal).filter(WaterGoal.keycloak_id == keycloak_id).first()
     if not user_goal:
         raise HTTPException(status_code=400, detail="Water goal not found for user")

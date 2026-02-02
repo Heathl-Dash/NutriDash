@@ -1,3 +1,4 @@
+import uuid
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -6,16 +7,13 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.models.waterGoal import WaterGoal, WaterIntake
-from app.schemas.waterGoal import (
-    WaterGoalCreate, 
-    WaterGoalUpdate, 
-    WaterIntakeCreate
-)
+from app.schemas.waterGoal import WaterGoalCreate, WaterGoalUpdate, WaterIntakeCreate
 
-import uuid
 
 def get_water_goal(db: Session, keycloak_id: uuid.UUID):
-    water_goal = db.query(WaterGoal).filter(WaterGoal.keycloak_id == keycloak_id).first()
+    water_goal = (
+        db.query(WaterGoal).filter(WaterGoal.keycloak_id == keycloak_id).first()
+    )
     if not water_goal:
         return None
 
@@ -30,8 +28,11 @@ def get_water_goal(db: Session, keycloak_id: uuid.UUID):
 
     return water_goal
 
+
 def create_water_goal(db: Session, keycloak_id: uuid.UUID, water_goal: WaterGoalCreate):
-    has_water_goal = db.query(WaterGoal).filter(WaterGoal.keycloak_id == keycloak_id).first()
+    has_water_goal = (
+        db.query(WaterGoal).filter(WaterGoal.keycloak_id == keycloak_id).first()
+    )
     if has_water_goal:
         raise HTTPException(
             status_code=400, detail="Water goal already exists for this user"
@@ -51,7 +52,9 @@ def create_water_goal(db: Session, keycloak_id: uuid.UUID, water_goal: WaterGoal
     return db_water_goal
 
 
-def update_water_goal(db: Session, keycloak_id: uuid.UUID, water_goal_data: WaterGoalUpdate):
+def update_water_goal(
+    db: Session, keycloak_id: uuid.UUID, water_goal_data: WaterGoalUpdate
+):
     db_water_goal = get_water_goal(db, keycloak_id)
     if not db_water_goal:
         return None

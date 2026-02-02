@@ -17,10 +17,11 @@ from .api.routers import (
     water_goal,
 )
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
-    
+
     scheduler = BackgroundScheduler()
     scheduler.add_job(run_dump, "interval", hours=24)
     scheduler.start()
@@ -32,7 +33,7 @@ async def lifespan(app: FastAPI):
 
     scheduler.shutdown()
 
-    
+
 app = FastAPI(lifespan=lifespan)
 
 nutriRouter.include_router(todo.router, prefix="/todo", tags=["ToDo"])

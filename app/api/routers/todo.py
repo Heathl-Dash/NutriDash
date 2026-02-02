@@ -25,7 +25,6 @@ def read_todos(
     limit: int = 100,
     db: Session = Depends(get_db),
 ):
-
     return crud_todo.get_todos(db, keycloak_id=user_id, skip=skip, limit=limit)
 
 
@@ -33,7 +32,6 @@ def read_todos(
 def get_todo_history(
     user_id: int = Depends(get_keycloak_id), db: Session = Depends(get_db)
 ):
-
     history = crud_todo.list_by_user(db, user_id)
     return history
 
@@ -42,16 +40,16 @@ def get_todo_history(
 def read_todo(
     todo_id: int, user_id=Depends(get_keycloak_id), db: Session = Depends(get_db)
 ):
-
     todo = get_todo_or_err(db, todo_id, user_id)
     return todo
 
 
 @router.post("/", response_model=ToDoRead, status_code=201)
 def create_todo(
-    todo: ToDoCreate, user_id: int = Depends(get_keycloak_id), db: Session = Depends(get_db)
+    todo: ToDoCreate,
+    user_id: int = Depends(get_keycloak_id),
+    db: Session = Depends(get_db),
 ):
-
     try:
         return crud_todo.create_todo(db, todo, user_id)
     except SQLAlchemyError as err:
@@ -67,7 +65,6 @@ def update_todo(
     user_id: int = Depends(get_keycloak_id),
     db: Session = Depends(get_db),
 ):
-
     get_todo_or_err(db, todo_id, user_id)
     todo = crud_todo.update_todo(db, todo_id, todo_data)
     return todo

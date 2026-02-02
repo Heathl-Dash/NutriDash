@@ -1,9 +1,10 @@
+import uuid
+
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.crud import crud_todo
 
-import uuid
 
 def get_todo_or_err(db: Session, todo_id: int, keycloak_id: uuid.UUID):
     todo = crud_todo.get_todo(db, todo_id)

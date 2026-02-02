@@ -1,14 +1,7 @@
-from sqlalchemy import (
-    Boolean, 
-    Column, 
-    DateTime, 
-    ForeignKey, 
-    Integer, 
-    String, 
-    func
-)
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import relationship
+
 from app.db.database import Base
 
 

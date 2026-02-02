@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -10,8 +11,6 @@ from app.dependencies.user import get_keycloak_id
 from app.schemas.waterGoal import WaterBottleCreate, WaterBottleRead, WaterBottleUpdate
 from app.utils.water_bottle import get_water_bottle_or_err
 
-import uuid
-
 router = APIRouter()
 
 
@@ -19,7 +18,6 @@ router = APIRouter()
 def read_water_bottles(
     keycloak_id: uuid.UUID = Depends(get_keycloak_id), db: Session = Depends(get_db)
 ):
-
     return crud_water_bottle.get_water_bottle_user(db, keycloak_id=keycloak_id)
 
 
@@ -29,7 +27,6 @@ def read_water_bottle(
     keycloak_id: uuid.UUID = Depends(get_keycloak_id),
     db: Session = Depends(get_db),
 ):
-
     water_bottle = get_water_bottle_or_err(db, water_bottle_id, keycloak_id)
     return water_bottle
 
@@ -40,7 +37,6 @@ def create_water_bottle(
     keycloak_id: uuid.UUID = Depends(get_keycloak_id),
     db: Session = Depends(get_db),
 ):
-
     try:
         return crud_water_bottle.create_water_bottle(db, water_bottle, keycloak_id)
     except SQLAlchemyError as err:
@@ -56,7 +52,6 @@ def update_water_bottle(
     keycloak_id: uuid.UUID = Depends(get_keycloak_id),
     db: Session = Depends(get_db),
 ):
-
     get_water_bottle_or_err(db, water_bottle_id, keycloak_id)
     water_bottle = crud_water_bottle.update_water_bottle(
         db, water_bottle_id, water_bottle_data
@@ -72,6 +67,5 @@ def delete_water_bottle(
     keycloak_id: uuid.UUID = Depends(get_keycloak_id),
     db: Session = Depends(get_db),
 ):
-
     get_water_bottle_or_err(db, water_bottle_id, keycloak_id)
     return crud_water_bottle.delete_water_bottle(db, water_bottle_id)
