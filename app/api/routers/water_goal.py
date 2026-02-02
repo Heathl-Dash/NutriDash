@@ -1,3 +1,4 @@
+import uuid
 from datetime import date
 
 from fastapi import APIRouter, Depends
@@ -17,14 +18,13 @@ from app.schemas.waterGoal import (
 )
 from app.utils.water_goal import get_water_goal_or_err
 
-import uuid
-
 router = APIRouter()
 
 
 @router.get("/", response_model=WaterGoalRead, status_code=201)
-def read_water_goal(keycloak_id: uuid.UUID = Depends(get_keycloak_id), db: Session = Depends(get_db)):
-
+def read_water_goal(
+    keycloak_id: uuid.UUID = Depends(get_keycloak_id), db: Session = Depends(get_db)
+):
     return get_water_goal_or_err(db, keycloak_id)
 
 
@@ -34,7 +34,6 @@ def create_water(
     keycloak_id: uuid.UUID = Depends(get_keycloak_id),
     db: Session = Depends(get_db),
 ):
-
     try:
         return crud_water_goal.create_water_goal(db, keycloak_id, water_goal)
     except SQLAlchemyError as err:
@@ -49,7 +48,6 @@ def update_water_goal(
     keycloak_id: uuid.UUID = Depends(get_keycloak_id),
     db: Session = Depends(get_db),
 ):
-
     get_water_goal_or_err(db, keycloak_id)
     water_goal = crud_water_goal.update_water_goal(db, keycloak_id, water_goal_data)
     return water_goal
@@ -59,7 +57,6 @@ def update_water_goal(
 def delete_water_goal(
     keycloak_id: uuid.UUID = Depends(get_keycloak_id), db: Session = Depends(get_db)
 ):
-
     get_water_goal_or_err(db, keycloak_id)
     water_goal = crud_water_goal.delete_water_goal(db, keycloak_id)
     return water_goal

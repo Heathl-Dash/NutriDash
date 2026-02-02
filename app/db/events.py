@@ -45,7 +45,7 @@ def receive_before_flush(session, flush_context, instances=None):
 def receive_after_flush(session, flush_context):
     # Criar logs após flush com id já definido
     from app.models.waterGoal import WaterGoal
-    
+
     for obj in session.new:
         if isinstance(obj, WaterGoal):
             log_water_goal_change(

@@ -1,14 +1,6 @@
-from sqlalchemy import (
-    Column, 
-    DateTime, 
-    ForeignKey, 
-    Integer, 
-    String, 
-    func, 
-    text
-)
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func, text
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import relationship
 
 from app.db.database import Base
 
@@ -31,7 +23,7 @@ class WaterGoal(Base):
 
 class WaterBottle(Base):
     __tablename__ = "water_bottles"
-    
+
     water_bottle_id = Column(Integer, primary_key=True, index=True)
     water_goal_id = Column(
         Integer, ForeignKey("water_goals.water_goal_id"), nullable=False

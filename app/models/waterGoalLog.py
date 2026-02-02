@@ -1,7 +1,10 @@
 from datetime import datetime, timezone
+
 from sqlalchemy import JSON, Column, DateTime, Integer, String
-from app.db.database import Base
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+
+from app.db.database import Base
+
 
 class WaterGoalLog(Base):
     __tablename__ = "water_goal_logs"

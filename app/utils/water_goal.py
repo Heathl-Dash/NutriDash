@@ -1,9 +1,10 @@
+import uuid
+
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.crud import crud_water_goal
 
-import uuid
 
 def get_water_goal_or_err(db: Session, keycloak_id: uuid.UUID):
     water_goal = crud_water_goal.get_water_goal(db, keycloak_id)

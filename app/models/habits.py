@@ -1,6 +1,8 @@
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, func
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+
 from app.db.database import Base
+
 
 class Habit(Base):
     __tablename__ = "habits"

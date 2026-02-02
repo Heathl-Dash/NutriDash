@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, time, timedelta
 
 from sqlalchemy.orm import Session
@@ -5,7 +6,6 @@ from sqlalchemy.orm import Session
 from app.models.todo import ToDo, ToDohistory
 from app.schemas.todo import ToDoCreate, ToDoUpdate
 
-import uuid
 
 def get_todo(db: Session, todo_id: int):
     return db.query(ToDo).filter(ToDo.id == todo_id).first()
@@ -65,7 +65,9 @@ def get_today_entry(db: Session, todo_id: int):
     )
 
 
-def create_history(db: Session, todo_id: int, keycloak_id: uuid.UUID, date_done: datetime = None):
+def create_history(
+    db: Session, todo_id: int, keycloak_id: uuid.UUID, date_done: datetime = None
+):
     if date_done is None:
         date_done = datetime.now()
     entry = ToDohistory(todo_id=todo_id, keycloak_id=keycloak_id, date_done=date_done)

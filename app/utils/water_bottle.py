@@ -1,9 +1,10 @@
+import uuid
+
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.crud import crud_water_bottle
 
-import uuid
 
 def get_water_bottle_or_err(db: Session, water_bottle_id: int, keycloak_id: uuid.UUID):
     water_bottle = crud_water_bottle.get_water_bottle(db, water_bottle_id)

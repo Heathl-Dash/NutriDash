@@ -1,11 +1,10 @@
 import os
+import uuid
 
 import jwt
-from jwt import PyJWKClient
 from dotenv import load_dotenv
 from fastapi import HTTPException
-
-import uuid
+from jwt import PyJWKClient
 
 load_dotenv()
 
@@ -15,16 +14,14 @@ URL_CERTS = os.getenv("URL_CERTS")
 
 jwks_client = PyJWKClient(URL_CERTS)
 
+
 def verify_token(token: str) -> uuid.UUID:
     try:
         signing_key = jwks_client.get_signing_key_from_jwt(token)
         print(signing_key.key)
 
         payload = jwt.decode(
-            token,
-            signing_key.key,
-            algorithms=[ALGORITHM],
-            audience=AUDIENCE
+            token, signing_key.key, algorithms=[ALGORITHM], audience=AUDIENCE
         )
         print(payload)
 
@@ -38,8 +35,7 @@ def verify_token(token: str) -> uuid.UUID:
 
     except jwt.exceptions.PyJWKClientError:
         raise HTTPException(
-            status_code=503, 
-            detail="Não foi possível obter as chaves do Keycloak. O serviço está online?"
+            status_code=503, detail="Não foi possível obter as chaves do Keycloak"
         )
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expirado")
