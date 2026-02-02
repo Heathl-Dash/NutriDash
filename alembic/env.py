@@ -10,9 +10,6 @@ from alembic import context
 from app.db.database import Base
 
 target_metadata = Base.metadata
-import app.models.habits
-import app.models.todo
-import app.models.waterGoal
 
 load_dotenv()
 

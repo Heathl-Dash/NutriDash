@@ -17,11 +17,11 @@ from .api.routers import (
     water_goal,
 )
 
-Base.metadata.create_all(bind=engine)
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+
     scheduler = BackgroundScheduler()
     scheduler.add_job(run_dump, "interval", hours=24)
     scheduler.start()

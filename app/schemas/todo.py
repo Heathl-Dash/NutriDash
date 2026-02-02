@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -14,7 +15,7 @@ class ToDoCreate(ToDoBase):
 
 
 class ToDoRead(ToDoBase):
-    user_id: int
+    keycloak_id: UUID
     id: int
     done: bool
     created: datetime
@@ -31,7 +32,7 @@ class ToDoUpdate(ToDoBase):
 
 class ToDoHistoryBase(BaseModel):
     todo_id: int
-    user_id: int
+    keycloak_id: UUID
 
 
 class ToDoHistoryCreate(ToDoHistoryBase):

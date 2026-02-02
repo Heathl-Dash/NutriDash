@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -31,8 +32,7 @@ class WaterBottleCreate(WaterBottleBase):
 
 class WaterBottleRead(WaterBottleBase):
     water_bottle_id: int
-    user_id: int
-    id_bottle_style: int
+    keycloak_id: UUID
 
     class Config:
         orm_mode = True
@@ -66,7 +66,7 @@ class WaterIntakeCreate(WaterIntakeBase):
 
 class WaterIntakeRead(BaseModel):
     id: int
-    user_id: int
+    keycloak_id: UUID
     water_goal_id: int
     ml: int
     timestamp: datetime

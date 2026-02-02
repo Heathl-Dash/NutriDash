@@ -1,5 +1,5 @@
-from sqlalchemy import Boolean, Column, DateTime, Integer, String
-from sqlalchemy.sql import func
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, func
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
 from app.db.database import Base
 
@@ -14,5 +14,5 @@ class Habit(Base):
     negative = Column(Boolean, default=False)
     positive_count = Column(Integer, default=0)
     negative_count = Column(Integer, default=0)
-    user_id = Column(Integer, nullable=False)
-    created = Column(DateTime, default=func.now(), nullable=False)
+    keycloak_id = Column(PG_UUID(as_uuid=True), nullable=False, index=True)
+    created = Column(DateTime, server_default=func.now(), nullable=False)

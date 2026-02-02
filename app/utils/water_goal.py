@@ -1,16 +1,18 @@
+import uuid
+
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.crud import crud_water_goal
 
 
-def get_water_goal_or_err(db: Session, user_id: int):
-    water_goal = crud_water_goal.get_water_goal(db, user_id)
+def get_water_goal_or_err(db: Session, keycloak_id: uuid.UUID):
+    water_goal = crud_water_goal.get_water_goal(db, keycloak_id)
 
     if not water_goal:
         raise HTTPException(status_code=404, detail="water_goal not found")
 
-    if water_goal.user_id != user_id:
+    if water_goal.keycloak_id != keycloak_id:
         raise HTTPException(
             status_code=403, detail="Not authorized to access this water_goal"
         )

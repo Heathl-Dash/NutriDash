@@ -61,7 +61,7 @@ def start_delete_user_objects():
         if event == "delete":
             db: Session = SessionLocal()
             try:
-                db.query(Habit).filter(Habit.user_id == user_id).delete(
+                db.query(Habit).filter(Habit.keycloak_id == user_id).delete(
                     synchronize_session=False
                 )
                 db.query(ToDo).filter(ToDo.user_id == user_id).delete(
@@ -85,7 +85,9 @@ def start_delete_user_objects():
             try:
                 weight = data.get("weight")
                 water_goal_data = WaterGoalCreate(weight=weight, ml_drinked=0)
-                create_water_goal(db=db, user_id=user_id, water_goal=water_goal_data)
+                create_water_goal(
+                    db=db, keycloak_id=user_id, water_goal=water_goal_data
+                )
             except Exception as e:
                 db.rollback()
                 print(f"Erro ao criar meta de água: {e}")

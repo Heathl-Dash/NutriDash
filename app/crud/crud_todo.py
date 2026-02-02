@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, time, timedelta
 
 from sqlalchemy.orm import Session
@@ -10,10 +11,10 @@ def get_todo(db: Session, todo_id: int):
     return db.query(ToDo).filter(ToDo.id == todo_id).first()
 
 
-def get_todos(db: Session, user_id: int, skip: int = 0, limit: int = 100):
+def get_todos(db: Session, keycloak_id: uuid.UUID, skip: int = 0, limit: int = 100):
     return (
         db.query(ToDo)
-        .filter(ToDo.user_id == user_id)
+        .filter(ToDo.keycloak_id == keycloak_id)
         .order_by(ToDo.done.asc(), ToDo.created.desc())
         .offset(skip)
         .limit(limit)
@@ -21,8 +22,8 @@ def get_todos(db: Session, user_id: int, skip: int = 0, limit: int = 100):
     )
 
 
-def create_todo(db: Session, todo: ToDoCreate, user_id: int):
-    db_todo = ToDo(**todo.model_dump(), user_id=user_id)
+def create_todo(db: Session, todo: ToDoCreate, keycloak_id: uuid.UUID):
+    db_todo = ToDo(**todo.model_dump(), keycloak_id=keycloak_id)
     db.add(db_todo)
     db.commit()
     db.refresh(db_todo)
@@ -64,10 +65,12 @@ def get_today_entry(db: Session, todo_id: int):
     )
 
 
-def create_history(db: Session, todo_id: int, user_id: int, date_done: datetime = None):
+def create_history(
+    db: Session, todo_id: int, keycloak_id: uuid.UUID, date_done: datetime = None
+):
     if date_done is None:
         date_done = datetime.now()
-    entry = ToDohistory(todo_id=todo_id, user_id=user_id, date_done=date_done)
+    entry = ToDohistory(todo_id=todo_id, keycloak_id=keycloak_id, date_done=date_done)
     db.add(entry)
     db.commit()
     db.refresh(entry)
@@ -86,5 +89,5 @@ def list_by_todo(db: Session, todo_id: int):
     return db.query(ToDohistory).filter(ToDohistory.todo_id == todo_id).all()
 
 
-def list_by_user(db: Session, user_id: int):
-    return db.query(ToDohistory).filter(ToDohistory.user_id == user_id).all()
+def list_by_user(db: Session, keycloak_id: uuid.UUID):
+    return db.query(ToDohistory).filter(ToDohistory.keycloak_id == keycloak_id).all()
