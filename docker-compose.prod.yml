@@ -1,6 +1,6 @@
 services:
   nutri_web:
-    image: docker.io/gabriellaaquino/nutridash:latest
+    image: docker.io/gabriellaaquino/nutridash:prod
     container_name: nutri_web
     command: ./start.sh
     volumes:
