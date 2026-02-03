@@ -2,7 +2,7 @@ name: cd
 
 on:
   workflow_run:
-    workflows: ["format-lint"]
+    workflows: ["CI"]
     types:
       - completed
 
