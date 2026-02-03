@@ -23,8 +23,8 @@ def test_create_habit():
 
     assert result.keycloak_id == user1
     assert result.title == "Comer fruta"
-    assert result.positive
-    assert result.negative
+    assert result.positive is True
+    assert result.negative is False
 
 
 def test_create_habit_cannot_be_both_non_positive_and_non_negative():
@@ -54,8 +54,8 @@ def test_update_habit():
 
     assert result.title == "Comer fruta"
     assert result.description == "desc"
-    assert result.positive
-    assert result.negative
+    assert result.positive is True
+    assert result.negative is True
 
 
 def test_update_habit_cannot_be_both_non_positive_and_non_negative():
