@@ -6,10 +6,9 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 env:
-  IMAGE_NAME: ghcr.io/healthdash/nutridash
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/nutridash
 
 jobs:
   build_and_deploy:
@@ -27,12 +26,11 @@ jobs:
         with:
           driver: docker-container
 
-      - name: Log in to GHCR
+      - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push image
         uses: docker/build-push-action@v6
@@ -40,8 +38,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.IMAGE_NAME }}:prod
+            docker.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            docker.io/${{ env.IMAGE_NAME }}:prod
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
