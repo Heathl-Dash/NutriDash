@@ -1,6 +1,6 @@
 services:
   nutri_web:
-    image: ghcr.io/Heathl-Dash/NutriDash:latest
+    image: ghcr.io/Heathl-Dash/NutriDash:prod
     container_name: nutri_web
     command: ./start.sh
     volumes:
