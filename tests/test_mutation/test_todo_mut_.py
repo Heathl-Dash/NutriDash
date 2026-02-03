@@ -12,7 +12,7 @@ def test_create_todo_robust():
     mock_db = MagicMock()
     todo_data = ToDoCreate(title="Título Único", description="Descrição Única")
 
-    result = crud_todo.create_todo(mock_db, todo_data, keycloak_id=user1)
+    crud_todo.create_todo(mock_db, todo_data, keycloak_id=user1)
 
     mock_db.add.assert_called_once()
     added_obj = mock_db.add.call_args[0][0]
