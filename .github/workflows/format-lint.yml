@@ -20,11 +20,16 @@ jobs:
         with:
           python-version: "3.13" 
 
-      - name: Instalar Ruff
-        run: pip install ruff
+      - name: Instalar dependências
+        run: | 
+            pip install ruff pytest
+            pip install -r requirements.txt
 
       - name: Verificar formatação (Ruff Format)
         run: ruff format --check .
 
       - name: Verificar erros de lint (Ruff Check)
         run: ruff check .
+      
+      - name: Run tests
+        run: pytest
