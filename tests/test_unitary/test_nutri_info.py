@@ -58,7 +58,7 @@ def test_ask_nutritional_info_invalid_json(mock_client):
         nutrition_info_ai_request.ask_nutritional_info(data)
 
     assert exc.value.status_code == 500
-    assert "JSON válido" in exc.value.detail
+    assert "Erro ao consultar o modelo de IA" in exc.value.detail
 
 
 # ---------- CASO DE EXCEÇÃO NA CHAMADA DO CLIENTE ----------
