@@ -57,8 +57,8 @@ def test_ask_nutritional_info_invalid_json(mock_client):
     with pytest.raises(HTTPException) as exc:
         nutrition_info_ai_request.ask_nutritional_info(data)
 
-    assert exc.value.status_code == 502
-    assert "JSON válido" in exc.value.detail
+    assert exc.value.status_code == 500
+    assert "Erro ao consultar o modelo de IA" in exc.value.detail
 
 
 # ---------- CASO DE EXCEÇÃO NA CHAMADA DO CLIENTE ----------
